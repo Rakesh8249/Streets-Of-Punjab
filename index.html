@@ -1,10 +1,11 @@
-
 <!DOCTYPE html>
 <html lang="en">
 <head>
 <meta charset="UTF-8">
 <meta name="viewport" content="width=device-width, initial-scale=1.0">
 <title>Streets Of Punjab | Admin Dashboard</title>
+
+<link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/cropperjs/1.6.2/cropper.min.css">
 
 <style>
 *{margin:0;padding:0;box-sizing:border-box;font-family:Arial,sans-serif}
@@ -31,9 +32,9 @@ button{cursor:pointer}
 .restaurant-status-button:disabled{opacity:.6;cursor:not-allowed}
 .restaurant-status-light{width:10px;height:10px;border-radius:50%;background:#94a3b8}
 .restaurant-status-button.is-online{background:#123c2b;border-color:#168b50}
-.restaurant-status-button.is-online .restaurant-status-light{background:#22c55e;box-shadow:0 0 10px #22c55e}
+.restaurant-status-button.is-online .restaurant-status-light{background:#22c55e}
 .restaurant-status-button.is-offline{background:#421f25;border-color:#c33}
-.restaurant-status-button.is-offline .restaurant-status-light{background:#ef4444;box-shadow:0 0 10px #ef4444}
+.restaurant-status-button.is-offline .restaurant-status-light{background:#ef4444}
 .layout{display:flex;min-height:calc(100vh - 144px)}
 .sidebar{width:82px;background:#121318;padding:14px 6px;border-right:1px solid #292a31;flex-shrink:0}
 .nav-item{width:100%;min-height:66px;padding:9px 3px;margin-bottom:5px;border:0;border-radius:8px;background:transparent;color:#c5c6ce;display:flex;flex-direction:column;align-items:center;justify-content:center;gap:5px;font-size:10px;text-align:center}
@@ -74,17 +75,10 @@ button{cursor:pointer}
 .reject{background:#fff0f0;color:#d33}
 .ready-btn{background:#168b50;color:#fff}
 .picked-btn{background:#333;color:#fff}
-.empty{grid-column:1/-1;background:#fff;padding:65px 20px;text-align:center;border-radius:10px;color:#888}
+.empty{grid-column:1/-1;background:#fff;padding:45px 20px;text-align:center;border-radius:10px;color:#888}
 .empty h2{color:#333;margin-bottom:10px}
-.stats{display:grid;grid-template-columns:repeat(4,1fr);gap:17px;margin-bottom:28px}
-.stat-card{background:#fff;border-radius:10px;padding:20px;border:1px solid #eee}
-.stat-card p{font-size:13px;color:#888;margin-bottom:12px}
-.stat-card h2{font-size:25px}
-.report-tabs{display:flex;gap:10px;border-bottom:1px solid #ddd;margin:18px 0 22px}
-.report-tab{padding:12px 16px;border:0;border-bottom:3px solid #e85d24;background:transparent;color:#e85d24;font-weight:bold}
-.reports-note{color:#888;font-size:13px;margin-top:4px}
 
-/* MENU - SWIGGY STYLE */
+/* MENU */
 .menu-toolbar{display:flex;justify-content:space-between;align-items:center;gap:12px;flex-wrap:wrap;margin:20px 0}
 .menu-toolbar-left{display:flex;gap:10px;align-items:center;flex-wrap:wrap}
 .primary-btn{border:0;border-radius:8px;background:#e85d24;color:white;padding:12px 17px;font-size:13px;font-weight:700}
@@ -99,7 +93,12 @@ button{cursor:pointer}
 .category-side-item:hover{background:#fff5f0}
 .category-side-item.active{background:#fff0e9;color:#e85d24;border-left:3px solid #e85d24}
 .category-count{font-size:11px;color:#999;background:#f2f2f2;border-radius:15px;padding:4px 7px}
-.category-side-item.active .category-count{background:#ffe0d2;color:#e85d24}
+.category-name-wrap{display:flex;align-items:center;gap:7px;min-width:0;flex:1}
+.category-actions{display:flex;align-items:center;gap:4px;flex-shrink:0}
+.category-action{border:1px solid #e5e5e5;background:#fff;border-radius:5px;padding:5px 6px;font-size:10px;font-weight:700}
+.category-action.edit{color:#e85d24}
+.category-action.delete{color:#c33}
+.category-action:disabled{opacity:.5;cursor:not-allowed}
 .menu-content-panel{min-width:0}
 .menu-content-heading{display:flex;justify-content:space-between;align-items:center;gap:12px;margin-bottom:15px;flex-wrap:wrap}
 .menu-content-heading h2{font-size:19px}
@@ -107,8 +106,8 @@ button{cursor:pointer}
 .menu-content-filters{display:flex;gap:9px;align-items:center;flex-wrap:wrap}
 .menu-grid{display:grid;grid-template-columns:repeat(2,minmax(0,1fr));gap:15px}
 .menu-card{display:flex;gap:13px;background:#fff;border:1px solid #e9e9e9;border-radius:12px;padding:13px;min-width:0}
-.menu-image{width:105px;height:105px;flex:0 0 105px;border-radius:9px;background:#f1f1f1;object-fit:cover}
-.menu-image-placeholder{width:105px;height:105px;flex:0 0 105px;border-radius:9px;background:#f5f5f5;display:grid;place-items:center;font-size:35px}
+.menu-image,.menu-image-placeholder{width:105px;height:105px;flex:0 0 105px;border-radius:9px;background:#f1f1f1;object-fit:cover}
+.menu-image-placeholder{display:grid;place-items:center;font-size:35px}
 .menu-card-content{flex:1;min-width:0}
 .menu-item-name{font-size:15px;font-weight:700;overflow-wrap:anywhere}
 .food-type{display:inline-flex;align-items:center;gap:5px;font-size:10px;font-weight:700;margin-top:7px}
@@ -129,7 +128,7 @@ button{cursor:pointer}
 .small-action.delete{color:#c33}
 .menu-modal-backdrop{position:fixed;inset:0;background:#0008;z-index:150;display:none;align-items:center;justify-content:center;padding:16px}
 .menu-modal-backdrop.show{display:flex}
-.menu-modal{width:100%;max-width:560px;max-height:92vh;overflow-y:auto;background:white;border-radius:14px;padding:24px;box-shadow:0 15px 50px #0003}
+.menu-modal{width:100%;max-width:560px;max-height:92vh;overflow-y:auto;background:white;border-radius:14px;padding:24px}
 .modal-header{display:flex;align-items:center;justify-content:space-between;gap:10px;margin-bottom:20px}
 .modal-header h2{font-size:20px}
 .modal-close{border:0;background:#f3f3f3;border-radius:50%;width:34px;height:34px;font-size:20px}
@@ -143,8 +142,79 @@ button{cursor:pointer}
 .modal-error{font-size:12px;color:#c33;margin-top:8px;display:none}
 .menu-loading{grid-column:1/-1;background:#fff;padding:45px;text-align:center;border-radius:10px;color:#888}
 
+/* PHOTO UPLOAD AND CROP */
+.upload-box{border:2px dashed #ddd;border-radius:10px;padding:15px;background:#fafafa}
+.upload-box input{width:100%;font-size:12px}
+.upload-help{font-size:11px;color:#888;margin-top:7px;line-height:1.5}
+.photo-preview-wrap{margin-top:12px;display:flex;align-items:center;gap:12px;flex-wrap:wrap}
+.photo-preview{width:105px;height:105px;object-fit:cover;border-radius:9px;background:#eee;border:1px solid #ddd}
+.photo-preview-placeholder{width:105px;height:105px;border-radius:9px;background:#eee;display:grid;place-items:center;color:#999;font-size:30px}
+.crop-modal-backdrop{position:fixed;inset:0;background:#000b;z-index:300;display:none;align-items:center;justify-content:center;padding:15px}
+.crop-modal-backdrop.show{display:flex}
+.crop-modal{width:100%;max-width:620px;background:#fff;border-radius:14px;padding:20px;max-height:94vh;overflow-y:auto}
+.crop-modal h2{font-size:19px;margin-bottom:8px}
+.crop-modal p{font-size:12px;color:#777;margin-bottom:15px}
+.crop-image-area{width:100%;height:390px;background:#222;overflow:hidden;border-radius:9px}
+.crop-image-area img{display:block;max-width:100%}
+.crop-controls{display:flex;justify-content:space-between;gap:10px;flex-wrap:wrap;margin-top:15px}
+.crop-control-group{display:flex;gap:8px;flex-wrap:wrap}
+.crop-control-button{border:1px solid #ddd;background:#fff;padding:9px 12px;border-radius:7px;font-size:12px}
+.crop-confirm{border:0;background:#e85d24;color:#fff;padding:10px 16px;border-radius:7px;font-weight:bold}
+.crop-confirm:disabled{opacity:.5}
+.uploaded-label{font-size:11px;color:#168348;font-weight:bold;margin-top:5px}
+
+/* REPORTS */
+.reports-header{display:flex;justify-content:space-between;align-items:flex-start;gap:15px;flex-wrap:wrap;margin-bottom:20px}
+.reports-note{color:#888;font-size:13px;margin-top:5px}
+.report-controls{display:flex;gap:9px;align-items:center;flex-wrap:wrap}
+.report-select,.report-date{padding:10px 12px;border:1px solid #ddd;border-radius:8px;background:#fff;font-size:12px}
+.report-download{background:#e85d24;color:#fff;border:0;border-radius:8px;padding:11px 15px;font-size:12px;font-weight:bold}
+.report-nav{display:flex;gap:6px;overflow-x:auto;border-bottom:1px solid #ddd;margin:20px 0 22px}
+.report-nav button{white-space:nowrap;padding:13px 15px;border:0;border-bottom:3px solid transparent;background:transparent;color:#777;font-size:13px}
+.report-nav button.active{color:#e85d24;border-bottom-color:#e85d24;font-weight:bold}
+.report-section{margin-bottom:28px;scroll-margin-top:90px}
+.report-section-title{display:flex;justify-content:space-between;align-items:center;gap:10px;margin-bottom:14px}
+.report-section-title h2{font-size:18px}
+.report-section-title span{font-size:11px;color:#999}
+.report-cards{display:grid;grid-template-columns:repeat(4,minmax(0,1fr));gap:13px}
+.report-card{background:#fff;border:1px solid #eaeaea;border-radius:11px;padding:17px;min-width:0}
+.report-card-label{font-size:12px;color:#888;margin-bottom:12px;line-height:1.4}
+.report-card-value{font-size:24px;font-weight:800;overflow-wrap:anywhere}
+.report-card-foot{font-size:11px;color:#999;margin-top:9px;line-height:1.5}
+.report-card .positive{color:#168b50}
+.report-card .negative{color:#c33}
+.report-grid-two{display:grid;grid-template-columns:1.25fr 1fr;gap:16px}
+.report-panel{background:#fff;border:1px solid #eaeaea;border-radius:11px;padding:19px;min-width:0}
+.report-panel h3{font-size:15px;margin-bottom:16px}
+.report-panel-subtitle{font-size:11px;color:#999;margin-top:-10px;margin-bottom:15px}
+.report-chart{height:210px;display:flex;align-items:flex-end;gap:8px;padding:12px 4px 0;border-bottom:1px solid #eee}
+.chart-column{flex:1;min-width:0;height:100%;display:flex;flex-direction:column;justify-content:flex-end;align-items:center;gap:7px}
+.chart-bar-wrap{height:165px;width:100%;display:flex;align-items:flex-end;justify-content:center}
+.chart-bar{width:min(35px,75%);min-height:3px;background:#f07845;border-radius:5px 5px 0 0;position:relative}
+.chart-label{font-size:10px;color:#999;white-space:nowrap}
+.chart-value{font-size:10px;color:#777}
+.report-table{width:100%;border-collapse:collapse;font-size:12px}
+.report-table th{text-align:left;color:#888;font-weight:600;padding:11px 8px;border-bottom:1px solid #eee}
+.report-table td{padding:12px 8px;border-bottom:1px solid #f0f0f0}
+.report-table tr:last-child td{border-bottom:0}
+.report-table .right{text-align:right}
+.report-table-empty{text-align:center;color:#999;padding:22px!important}
+.report-status-row{display:flex;align-items:center;justify-content:space-between;gap:12px;padding:13px 0;border-bottom:1px solid #f0f0f0;font-size:13px}
+.report-status-row:last-child{border-bottom:0}
+.report-status-count{font-weight:800}
+.report-bar-line{height:8px;background:#f0f0f0;border-radius:10px;overflow:hidden;margin-top:7px}
+.report-bar-fill{height:100%;background:#e85d24;border-radius:10px}
+.report-info{padding:13px 15px;background:#fff9f3;border:1px solid #f5e5d8;border-radius:9px;color:#805333;font-size:12px;line-height:1.6;margin:12px 0 20px}
+.report-empty{padding:22px;text-align:center;color:#999;font-size:12px}
+.report-metric-list{display:grid;grid-template-columns:repeat(2,minmax(0,1fr));gap:12px}
+.report-metric{padding:14px;background:#fafafa;border-radius:8px}
+.report-metric span{display:block;color:#888;font-size:11px;margin-bottom:8px}
+.report-metric strong{font-size:18px}
+.report-date-label{font-size:11px;color:#888}
+.report-error{color:#c33;font-size:12px;margin:10px 0;display:none}
+
 /* PROFILE */
-.profile-card{max-width:760px;background:#fff;border:1px solid #ececf0;border-radius:14px;padding:26px;box-shadow:0 5px 20px #12131808}
+.profile-card{max-width:760px;background:#fff;border:1px solid #ececf0;border-radius:14px;padding:26px}
 .profile-identity{display:flex;align-items:center;gap:17px;padding-bottom:23px;border-bottom:1px solid #eee}
 .profile-avatar{width:66px;height:66px;flex:0 0 66px;display:grid;place-items:center;border-radius:50%;background:#fff0e9;color:#e85d24;font-size:26px;font-weight:800}
 .profile-name-wrap h2{font-size:21px;margin-bottom:9px;overflow-wrap:anywhere}
@@ -165,8 +235,8 @@ button{cursor:pointer}
 .login-btn:disabled{opacity:.6}
 .connection{font-size:12px;color:#888;margin-top:15px}
 
-@media(max-width:1100px){.menu-grid{grid-template-columns:1fr}}
-@media(max-width:1000px){.stats{grid-template-columns:repeat(2,1fr)}.order-list{grid-template-columns:1fr}}
+@media(max-width:1100px){.menu-grid{grid-template-columns:1fr}.report-cards{grid-template-columns:repeat(2,minmax(0,1fr))}}
+@media(max-width:1000px){.order-list{grid-template-columns:1fr}.report-grid-two{grid-template-columns:1fr}}
 @media(max-width:700px){
 .header{padding:0 13px}.logo{font-size:16px}.admin{gap:7px;font-size:12px}.avatar{width:32px;height:32px}
 .order-header{padding:10px 12px;gap:12px}.order-heading{font-size:14px}.order-divider{height:38px}
@@ -174,7 +244,7 @@ button{cursor:pointer}
 .restaurant-status-control{width:100%;justify-content:space-between;margin-left:0;padding-top:9px;border-top:1px solid #334155}
 .restaurant-status-button{min-width:130px}
 .sidebar{width:72px;padding:12px 4px}.nav-item{min-height:60px;padding:8px 2px}.nav-label{font-size:8px}
-.main{padding:17px 12px}.stats{gap:9px}.stat-card{padding:13px}.stat-card h2{font-size:21px}
+.main{padding:17px 12px}
 .toolbar{align-items:stretch;flex-direction:column}.search{width:100%}
 .profile-card{padding:19px}.profile-details{grid-template-columns:1fr}
 .profile-avatar{width:56px;height:56px;flex-basis:56px}.profile-name-wrap h2{font-size:18px}
@@ -188,8 +258,19 @@ button{cursor:pointer}
 .menu-card{gap:10px;padding:10px}
 .menu-image,.menu-image-placeholder{width:88px;height:88px;flex-basis:88px}
 .menu-modal{padding:18px}
+.report-cards{grid-template-columns:repeat(2,minmax(0,1fr));gap:9px}
+.report-card{padding:13px}.report-card-value{font-size:20px}
+.report-panel{padding:13px}.report-controls{width:100%}
+.report-select{flex:1;min-width:120px}
+.crop-modal{padding:14px}
+.crop-image-area{height:320px}
 }
-@media(max-width:390px){.form-row{grid-template-columns:1fr}.menu-card{flex-direction:column}.menu-image,.menu-image-placeholder{width:100%;height:150px;flex-basis:150px}}
+@media(max-width:390px){
+.form-row{grid-template-columns:1fr}
+.menu-card{flex-direction:column}
+.menu-image,.menu-image-placeholder{width:100%;height:150px;flex-basis:150px}
+.report-cards{grid-template-columns:1fr 1fr}
+}
 </style>
 </head>
 
@@ -241,7 +322,7 @@ button{cursor:pointer}
 
 <div class="layout">
 <aside class="sidebar">
-    <button class="nav-item active" type="button" data-page="ordersPage" aria-current="page"><span class="nav-icon">🛍️</span><span class="nav-label">Orders</span></button>
+    <button class="nav-item active" type="button" data-page="ordersPage"><span class="nav-icon">🛍️</span><span class="nav-label">Orders</span></button>
     <button class="nav-item" type="button" data-page="menuPage"><span class="nav-icon">🍽️</span><span class="nav-label">Menu</span></button>
     <button class="nav-item" type="button" data-page="growthPage"><span class="nav-icon">📈</span><span class="nav-label">Growth</span></button>
     <button class="nav-item" type="button" data-page="complaintsPage"><span class="nav-icon">💬</span><span class="nav-label">Complaints</span></button>
@@ -253,6 +334,7 @@ button{cursor:pointer}
 </aside>
 
 <main class="main">
+
 <section class="page-section" id="ordersPage">
     <div id="pageNotice" class="notice"></div>
     <div class="tabs">
@@ -271,7 +353,6 @@ button{cursor:pointer}
     </div>
 </section>
 
-<!-- MENU PAGE -->
 <section class="page-section" id="menuPage" hidden>
     <h1 class="page-title">Menu Management</h1>
     <p class="subtitle">Manage your restaurant food items and categories.</p>
@@ -317,22 +398,144 @@ button{cursor:pointer}
 </section>
 
 <section class="page-section" id="reportsPage" hidden>
-    <h1 class="page-title">Reports</h1>
-    <p class="reports-note">Your restaurant order summary.</p>
-    <div class="report-tabs"><button class="report-tab" type="button">Overview</button></div>
-    <section class="stats">
-        <div class="stat-card"><p>Total Orders</p><h2 id="totalOrders">0</h2></div>
-        <div class="stat-card"><p>New Orders</p><h2 id="newOrders">0</h2></div>
-        <div class="stat-card"><p>Preparing</p><h2 id="preparingOrders">0</h2></div>
-        <div class="stat-card"><p>Completed</p><h2 id="completedOrders">0</h2></div>
-    </section>
+    <div class="reports-header">
+        <div>
+            <h1 class="page-title">Business Reports</h1>
+            <p class="reports-note" id="reportDateText">Your restaurant performance overview.</p>
+        </div>
+        <div class="report-controls">
+            <select class="report-select" id="reportRange">
+                <option value="today">Today</option>
+                <option value="7">Last 7 Days</option>
+                <option value="30" selected>Last 30 Days</option>
+                <option value="all">All Time</option>
+            </select>
+            <button class="report-download" type="button" id="downloadReportButton">↓ Download Report</button>
+        </div>
+    </div>
+
+    <div class="report-info">
+        Reports are calculated from the orders and menu records available in your database. Sales shown here are order totals, not a settlement or bank payout statement.
+    </div>
+    <div class="report-error" id="reportError"></div>
+
+    <nav class="report-nav" id="reportNav">
+        <button class="active" data-report-target="overviewReport">Overview</button>
+        <button data-report-target="salesReport">Sales</button>
+        <button data-report-target="ordersReport">Orders</button>
+        <button data-report-target="customersReport">Customers</button>
+        <button data-report-target="menuReport">Menu</button>
+        <button data-report-target="operationsReport">Operations</button>
+    </nav>
+
+    <div class="report-section" id="overviewReport">
+        <div class="report-section-title"><h2>Business Overview</h2><span id="overviewPeriod">Selected period</span></div>
+        <div class="report-cards">
+            <div class="report-card"><p class="report-card-label">Order Value</p><h2 class="report-card-value" id="rOverviewSales">₹0</h2><p class="report-card-foot">Total value of orders in selected period</p></div>
+            <div class="report-card"><p class="report-card-label">Total Orders</p><h2 class="report-card-value" id="rOverviewOrders">0</h2><p class="report-card-foot">Orders received in selected period</p></div>
+            <div class="report-card"><p class="report-card-label">Completed Orders</p><h2 class="report-card-value" id="rOverviewCompleted">0</h2><p class="report-card-foot">Orders marked Picked Up</p></div>
+            <div class="report-card"><p class="report-card-label">Average Order Value</p><h2 class="report-card-value" id="rOverviewAov">₹0</h2><p class="report-card-foot">Average value per order</p></div>
+        </div>
+        <div class="report-grid-two" style="margin-top:17px">
+            <div class="report-panel"><h3>Sales Trend</h3><p class="report-panel-subtitle">Order value by day</p><div class="report-chart" id="overviewSalesChart"></div></div>
+            <div class="report-panel"><h3>Order Status</h3><div id="overviewStatusList"></div></div>
+        </div>
+    </div>
+
+    <div class="report-section" id="salesReport">
+        <div class="report-section-title"><h2>Sales Performance</h2><span>Order value summary</span></div>
+        <div class="report-cards">
+            <div class="report-card"><p class="report-card-label">Total Order Value</p><h2 class="report-card-value" id="rSalesTotal">₹0</h2><p class="report-card-foot">Sum of order total amounts</p></div>
+            <div class="report-card"><p class="report-card-label">Completed Order Value</p><h2 class="report-card-value" id="rSalesCompleted">₹0</h2><p class="report-card-foot">Value of Picked Up orders</p></div>
+            <div class="report-card"><p class="report-card-label">Average Order Value</p><h2 class="report-card-value" id="rSalesAov">₹0</h2><p class="report-card-foot">Average order value</p></div>
+            <div class="report-card"><p class="report-card-label">Rejected Order Value</p><h2 class="report-card-value" id="rSalesRejected">₹0</h2><p class="report-card-foot">Value of rejected orders</p></div>
+        </div>
+        <div class="report-grid-two" style="margin-top:17px">
+            <div class="report-panel"><h3>Daily Order Value</h3><div class="report-chart" id="salesChart"></div></div>
+            <div class="report-panel">
+                <h3>Sales Summary</h3>
+                <div class="report-metric-list">
+                    <div class="report-metric"><span>Completed Orders</span><strong id="salesCompletedCount">0</strong></div>
+                    <div class="report-metric"><span>Rejected Orders</span><strong id="salesRejectedCount">0</strong></div>
+                    <div class="report-metric"><span>Pending / Active Orders</span><strong id="salesActiveCount">0</strong></div>
+                    <div class="report-metric"><span>Orders Per Day</span><strong id="salesPerDay">0</strong></div>
+                </div>
+            </div>
+        </div>
+    </div>
+
+    <div class="report-section" id="ordersReport">
+        <div class="report-section-title"><h2>Orders Analysis</h2><span>Order status breakdown</span></div>
+        <div class="report-cards">
+            <div class="report-card"><p class="report-card-label">Total Orders</p><h2 class="report-card-value" id="rOrderTotal">0</h2></div>
+            <div class="report-card"><p class="report-card-label">New Orders</p><h2 class="report-card-value" id="rOrderNew">0</h2></div>
+            <div class="report-card"><p class="report-card-label">Preparing Orders</p><h2 class="report-card-value" id="rOrderPreparing">0</h2></div>
+            <div class="report-card"><p class="report-card-label">Ready Orders</p><h2 class="report-card-value" id="rOrderReady">0</h2></div>
+        </div>
+        <div class="report-grid-two" style="margin-top:17px">
+            <div class="report-panel"><h3>Order Status Breakdown</h3><div id="ordersStatusList"></div></div>
+            <div class="report-panel">
+                <h3>Order Completion</h3>
+                <div class="report-metric-list">
+                    <div class="report-metric"><span>Picked Up</span><strong id="rOrderPicked">0</strong></div>
+                    <div class="report-metric"><span>Rejected</span><strong id="rOrderRejected">0</strong></div>
+                    <div class="report-metric"><span>Completion Rate</span><strong id="rOrderCompletionRate">0%</strong></div>
+                    <div class="report-metric"><span>Rejection Rate</span><strong id="rOrderRejectionRate">0%</strong></div>
+                </div>
+            </div>
+        </div>
+    </div>
+
+    <div class="report-section" id="customersReport">
+        <div class="report-section-title"><h2>Customer Insights</h2><span>Based on customer details saved with orders</span></div>
+        <div class="report-cards">
+            <div class="report-card"><p class="report-card-label">Unique Customers</p><h2 class="report-card-value" id="rUniqueCustomers">0</h2><p class="report-card-foot">Identified by phone or customer name</p></div>
+            <div class="report-card"><p class="report-card-label">Repeat Customers</p><h2 class="report-card-value" id="rRepeatCustomers">0</h2><p class="report-card-foot">Customers with more than one order</p></div>
+            <div class="report-card"><p class="report-card-label">New Customer Orders</p><h2 class="report-card-value" id="rNewCustomerOrders">0</h2></div>
+            <div class="report-card"><p class="report-card-label">Average Orders / Customer</p><h2 class="report-card-value" id="rCustomerAverage">0</h2></div>
+        </div>
+        <div class="report-panel" style="margin-top:17px"><h3>Customer Summary</h3><p class="report-panel-subtitle">Customer names and phone numbers are not exposed in this summary.</p><div id="customerSummaryList"></div></div>
+    </div>
+
+    <div class="report-section" id="menuReport">
+        <div class="report-section-title"><h2>Menu Performance</h2><span>Based on your current menu records</span></div>
+        <div class="report-cards">
+            <div class="report-card"><p class="report-card-label">Total Menu Items</p><h2 class="report-card-value" id="rMenuTotal">0</h2></div>
+            <div class="report-card"><p class="report-card-label">Items With Photos</p><h2 class="report-card-value" id="rMenuPhotos">0</h2></div>
+            <div class="report-card"><p class="report-card-label">Items With Description</p><h2 class="report-card-value" id="rMenuDescriptions">0</h2></div>
+            <div class="report-card"><p class="report-card-label">Available Items</p><h2 class="report-card-value" id="rMenuAvailable">0</h2></div>
+        </div>
+        <div class="report-grid-two" style="margin-top:17px">
+            <div class="report-panel"><h3>Top Selling Items</h3><p class="report-panel-subtitle">Ranked by ordered quantity, using order item records</p><div id="topSellingItems"></div></div>
+            <div class="report-panel">
+                <h3>Menu Quality</h3>
+                <div class="report-metric-list">
+                    <div class="report-metric"><span>Photo Coverage</span><strong id="rMenuPhotoRate">0%</strong></div>
+                    <div class="report-metric"><span>Description Coverage</span><strong id="rMenuDescriptionRate">0%</strong></div>
+                    <div class="report-metric"><span>Veg Items</span><strong id="rMenuVeg">0</strong></div>
+                    <div class="report-metric"><span>Non-Veg Items</span><strong id="rMenuNonVeg">0</strong></div>
+                </div>
+            </div>
+        </div>
+    </div>
+
+    <div class="report-section" id="operationsReport">
+        <div class="report-section-title"><h2>Operations</h2><span>Current restaurant and order operations</span></div>
+        <div class="report-cards">
+            <div class="report-card"><p class="report-card-label">Restaurant Status</p><h2 class="report-card-value" id="rRestaurantStatus">—</h2><p class="report-card-foot">Current online / offline status</p></div>
+            <div class="report-card"><p class="report-card-label">Completed Orders</p><h2 class="report-card-value" id="rOpsCompleted">0</h2></div>
+            <div class="report-card"><p class="report-card-label">Active Orders</p><h2 class="report-card-value" id="rOpsActive">0</h2></div>
+            <div class="report-card"><p class="report-card-label">Rejected Orders</p><h2 class="report-card-value" id="rOpsRejected">0</h2></div>
+        </div>
+        <div class="report-info">Prep time, delayed orders and historical online availability need timestamp history or a separate tracking table. This dashboard does not invent those values.</div>
+    </div>
 </section>
 
-<section class="page-section" id="growthPage" hidden><h1 class="page-title">Growth</h1></section>
-<section class="page-section" id="complaintsPage" hidden><h1 class="page-title">Complaints</h1></section>
-<section class="page-section" id="ratingsPage" hidden><h1 class="page-title">Ratings</h1></section>
-<section class="page-section" id="financePage" hidden><h1 class="page-title">Finance</h1></section>
-<section class="page-section" id="settingsPage" hidden><h1 class="page-title">Settings</h1></section>
+<section class="page-section" id="growthPage" hidden><h1 class="page-title">Growth</h1><p class="subtitle">Growth tools and promotions.</p></section>
+<section class="page-section" id="complaintsPage" hidden><h1 class="page-title">Complaints</h1><p class="subtitle">Customer complaints.</p></section>
+<section class="page-section" id="ratingsPage" hidden><h1 class="page-title">Ratings</h1><p class="subtitle">Customer ratings.</p></section>
+<section class="page-section" id="financePage" hidden><h1 class="page-title">Finance</h1><p class="subtitle">Finance overview.</p></section>
+<section class="page-section" id="settingsPage" hidden><h1 class="page-title">Settings</h1><p class="subtitle">Restaurant settings.</p></section>
 
 <section class="page-section" id="profilePage" hidden>
     <h1 class="page-title">Admin Profile</h1>
@@ -353,6 +556,7 @@ button{cursor:pointer}
         </div>
     </div>
 </section>
+
 </main>
 </div>
 
@@ -387,10 +591,24 @@ button{cursor:pointer}
             <label for="menuItemDescription">Description</label>
             <textarea class="form-control" id="menuItemDescription" placeholder="Describe your food item..."></textarea>
         </div>
+
         <div class="form-group">
-            <label for="menuItemImage">Food Image URL</label>
-            <input class="form-control" id="menuItemImage" type="url" placeholder="https://example.com/food-image.jpg">
+            <label for="menuPhotoFile">Food Photo Upload</label>
+            <div class="upload-box">
+                <input id="menuPhotoFile" type="file" accept="image/jpeg,image/png,image/webp">
+                <p class="upload-help">Select a photo from your device. Crop it into a square before saving. Recommended output: 600 × 600 pixels.</p>
+                <div class="photo-preview-wrap">
+                    <div id="photoPreviewPlaceholder" class="photo-preview-placeholder">🍽️</div>
+                    <img id="menuPhotoPreview" class="photo-preview" alt="Food photo preview" hidden>
+                    <div>
+                        <button type="button" class="secondary-btn" id="cropPhotoButton" disabled>Crop / Change Crop</button>
+                        <div class="uploaded-label" id="photoStatusText">No new photo selected</div>
+                    </div>
+                </div>
+            </div>
+            <input type="hidden" id="menuItemImage">
         </div>
+
         <div class="form-group">
             <label for="menuItemAvailability">Availability</label>
             <select class="form-control" id="menuItemAvailability"><option value="true">Available</option><option value="false">Unavailable</option></select>
@@ -404,11 +622,35 @@ button{cursor:pointer}
 </div>
 </div>
 
+<!-- PHOTO CROP MODAL -->
+<div class="crop-modal-backdrop" id="cropModalBackdrop">
+    <div class="crop-modal">
+        <h2>Crop Your Food Photo</h2>
+        <p>Move and zoom the photo. The final image will be saved as a square 600 × 600 image.</p>
+        <div class="crop-image-area">
+            <img id="cropImage" alt="Crop food photo">
+        </div>
+        <div class="crop-controls">
+            <div class="crop-control-group">
+                <button type="button" class="crop-control-button" id="zoomOutButton">− Zoom</button>
+                <button type="button" class="crop-control-button" id="zoomInButton">＋ Zoom</button>
+                <button type="button" class="crop-control-button" id="rotatePhotoButton">↻ Rotate</button>
+            </div>
+            <div class="crop-control-group">
+                <button type="button" class="secondary-btn" id="cancelCropButton">Cancel</button>
+                <button type="button" class="crop-confirm" id="confirmCropButton">Use This Crop</button>
+            </div>
+        </div>
+    </div>
+</div>
+
 <script type="module">
 import { createClient } from "https://cdn.jsdelivr.net/npm/@supabase/supabase-js@2/+esm";
+import Cropper from "https://cdn.jsdelivr.net/npm/cropperjs@1.6.2/+esm";
 
 const SUPABASE_URL = "https://vgoytrnkaamjqcitdfbb.supabase.co";
 const SUPABASE_KEY = "sb_publishable_0loBRlOydCm2KEEakdkMww_cEji5wnf";
+const STORAGE_BUCKET = "menu-images";
 const supabase = createClient(SUPABASE_URL, SUPABASE_KEY);
 
 const $ = id => document.getElementById(id);
@@ -425,6 +667,12 @@ const menuModalBackdrop=$("menuModalBackdrop"),menuItemForm=$("menuItemForm");
 let orders=[],currentTab="New",realtimeChannel=null,isLoading=false,dashboardUserId=null;
 let restaurantIsOnline=false,restaurantStatusInterval=null,restaurantStatusSaving=false;
 let menuItems=[],menuCategories=[],selectedMenuCategory="all",menuLoaded=false,menuSaving=false;
+
+let cropper=null;
+let selectedPhotoFile=null;
+let croppedPhotoBlob=null;
+let cropSourceUrl=null;
+let cropPreviewUrl=null;
 
 function escapeHTML(value){
  return String(value??"").replace(/[&<>"']/g,c=>({"&":"&amp;","<":"&lt;",">":"&gt;",'"':"&quot;","'":"&#039;"}[c]));
@@ -443,6 +691,142 @@ function formatTime(value){
  const date=new Date(value);
  if(Number.isNaN(date.getTime()))return "Time unavailable";
  return date.toLocaleString("en-IN",{day:"2-digit",month:"short",hour:"2-digit",minute:"2-digit"});
+}
+function money(value){
+ return "₹"+Number(value||0).toLocaleString("en-IN",{maximumFractionDigits:2});
+}
+
+/* PHOTO CROP HELPERS */
+function clearCropResources(){
+ if(cropper){cropper.destroy();cropper=null;}
+ if(cropSourceUrl){URL.revokeObjectURL(cropSourceUrl);cropSourceUrl=null;}
+}
+function resetPhotoSelection(){
+ selectedPhotoFile=null;
+ croppedPhotoBlob=null;
+ $("menuPhotoFile").value="";
+ $("cropPhotoButton").disabled=true;
+ $("photoStatusText").textContent="No new photo selected";
+ $("menuPhotoPreview").hidden=true;
+ $("photoPreviewPlaceholder").hidden=false;
+ $("menuPhotoPreview").removeAttribute("src");
+ if(cropPreviewUrl){URL.revokeObjectURL(cropPreviewUrl);cropPreviewUrl=null;}
+}
+function openCropModal(file){
+ clearCropResources();
+ selectedPhotoFile=file;
+ croppedPhotoBlob=null;
+ cropSourceUrl=URL.createObjectURL(file);
+ $("cropImage").src=cropSourceUrl;
+ $("cropModalBackdrop").classList.add("show");
+ $("confirmCropButton").disabled=true;
+
+ $("cropImage").onload=()=>{
+  cropper=new Cropper($("cropImage"),{
+   aspectRatio:1,
+   viewMode:1,
+   dragMode:"move",
+   autoCropArea:0.9,
+   responsive:true,
+   background:false,
+   movable:true,
+   zoomable:true,
+   rotatable:true,
+   scalable:false,
+   cropBoxMovable:true,
+   cropBoxResizable:true,
+   guides:true,
+   center:true,
+   ready(){ $("confirmCropButton").disabled=false; }
+  });
+ };
+}
+function closeCropModal(){
+ $("cropModalBackdrop").classList.remove("show");
+ clearCropResources();
+}
+$("menuPhotoFile").addEventListener("change",()=>{
+ const file=$("menuPhotoFile").files?.[0];
+ if(!file)return;
+
+ if(!file.type.startsWith("image/")){
+  $("menuPhotoFile").value="";
+  showMenuModalError("Please select a valid image file.");
+  return;
+ }
+ if(file.size>10*1024*1024){
+  $("menuPhotoFile").value="";
+  showMenuModalError("Photo size must be less than 10 MB.");
+  return;
+ }
+ openCropModal(file);
+});
+$("cropPhotoButton").addEventListener("click",()=>{
+ if(selectedPhotoFile)openCropModal(selectedPhotoFile);
+});
+$("zoomInButton").addEventListener("click",()=>cropper?.zoom(0.1));
+$("zoomOutButton").addEventListener("click",()=>cropper?.zoom(-0.1));
+$("rotatePhotoButton").addEventListener("click",()=>cropper?.rotate(90));
+$("cancelCropButton").addEventListener("click",()=>{
+ closeCropModal();
+ if(!croppedPhotoBlob){
+  selectedPhotoFile=null;
+  $("menuPhotoFile").value="";
+  $("cropPhotoButton").disabled=true;
+  $("photoStatusText").textContent="No new photo selected";
+ }
+});
+$("confirmCropButton").addEventListener("click",()=>{
+ if(!cropper)return;
+ $("confirmCropButton").disabled=true;
+ cropper.getCroppedCanvas({
+  width:600,
+  height:600,
+  minWidth:600,
+  minHeight:600,
+  maxWidth:600,
+  maxHeight:600,
+  imageSmoothingEnabled:true,
+  imageSmoothingQuality:"high"
+ }).toBlob(blob=>{
+  if(!blob){
+   $("confirmCropButton").disabled=false;
+   showMenuModalError("Could not crop this photo. Please try another image.");
+   return;
+  }
+  croppedPhotoBlob=blob;
+  if(cropPreviewUrl)URL.revokeObjectURL(cropPreviewUrl);
+  cropPreviewUrl=URL.createObjectURL(blob);
+  $("menuPhotoPreview").src=cropPreviewUrl;
+  $("menuPhotoPreview").hidden=false;
+  $("photoPreviewPlaceholder").hidden=true;
+  $("cropPhotoButton").disabled=false;
+  $("photoStatusText").textContent="✓ Square crop ready (600 × 600)";
+  closeCropModal();
+ });
+});
+function showMenuModalError(message){
+ const box=$("menuModalError");
+ box.textContent=message;
+ box.style.display="block";
+}
+async function uploadCroppedPhoto(){
+ if(!croppedPhotoBlob)return $("menuItemImage").value.trim()||null;
+
+ const fileName=`food-${Date.now()}-${Math.random().toString(36).slice(2,9)}.jpg`;
+ const {error:uploadError}=await supabase.storage
+  .from(STORAGE_BUCKET)
+  .upload(fileName,croppedPhotoBlob,{
+   contentType:"image/jpeg",
+   cacheControl:"3600",
+   upsert:false
+  });
+
+ if(uploadError)throw new Error("Photo upload failed: "+uploadError.message);
+
+ const {data}=supabase.storage.from(STORAGE_BUCKET).getPublicUrl(fileName);
+ if(!data?.publicUrl)throw new Error("Could not get the uploaded photo URL.");
+ return data.publicUrl;
 }
 
 /* LOGIN */
@@ -507,6 +891,7 @@ async function loadRestaurantStatus(){
   const {data,error}=await supabase.from("restaurant_settings").select("is_online").eq("id",1).single();
   if(error)throw error;
   renderRestaurantStatus(data.is_online);restaurantStatusError.style.display="none";restaurantStatusButton.disabled=false;
+  renderReports();
  }catch(error){
   restaurantStatusButton.disabled=true;restaurantStatusText.textContent="UNAVAILABLE";
   showRestaurantStatusError("Status load failed: "+error.message);
@@ -525,6 +910,7 @@ restaurantStatusButton.addEventListener("click",async()=>{
   }).eq("id",1).select("is_online").single();
   if(error)throw error;
   renderRestaurantStatus(data.is_online);restaurantStatusError.style.display="none";
+  renderReports();
  }catch(error){showRestaurantStatusError("Update failed: "+error.message);await loadRestaurantStatus();}
  finally{restaurantStatusSaving=false;restaurantStatusButton.disabled=false;}
 });
@@ -607,12 +993,203 @@ async function updateOrder(id,status){
 orderList.addEventListener("click",event=>{
  const button=event.target.closest("button[data-id]");if(button)updateOrder(button.dataset.id,button.dataset.status);
 });
-function updateStats(){
- $("totalOrders").innerText=orders.length;
- $("newOrders").innerText=orders.filter(o=>o.status==="New").length;
- $("preparingOrders").innerText=orders.filter(o=>o.status==="Preparing").length;
- $("completedOrders").innerText=orders.filter(o=>o.status==="Picked Up").length;
+
+/* REPORT DATE FILTER */
+function getReportOrders(){
+ const range=$("reportRange").value;
+ if(range==="all")return orders;
+ const now=new Date();
+ const start=new Date();
+ if(range==="today")start.setHours(0,0,0,0);
+ else start.setDate(start.getDate()-Number(range)+1);
+ return orders.filter(order=>{
+  const date=new Date(order.created_at);
+  return !Number.isNaN(date.getTime())&&date>=start&&date<=now;
+ });
 }
+function setReportText(){
+ const range=$("reportRange").value;
+ const labels={today:"Today",7:"Last 7 Days",30:"Last 30 Days",all:"All Time"};
+ $("reportDateText").textContent="Restaurant performance • "+labels[range];
+ $("overviewPeriod").textContent=labels[range];
+}
+function percent(part,total){
+ return total?((part/total)*100).toFixed(1)+"%":"0%";
+}
+function sumAmount(list){
+ return list.reduce((sum,order)=>sum+Number(order.total_amount||0),0);
+}
+function renderStatusBreakdown(targetId,list){
+ const statuses=["New","Preparing","Ready","Picked Up","Rejected"];
+ const colors={"New":"#5595df","Preparing":"#e9a52e","Ready":"#22a36a","Picked Up":"#64748b","Rejected":"#d9534f"};
+ const total=list.length;
+ $(targetId).innerHTML=statuses.map(status=>{
+  const count=list.filter(o=>o.status===status).length;
+  const width=total?(count/total)*100:0;
+  return `<div class="report-status-row"><div style="flex:1"><div style="display:flex;justify-content:space-between;gap:8px"><span>${status}</span><strong class="report-status-count">${count}</strong></div><div class="report-bar-line"><div class="report-bar-fill" style="width:${width}%;background:${colors[status]}"></div></div></div></div>`;
+ }).join("");
+}
+function renderSalesChart(targetId,list){
+ const days={};
+ list.forEach(order=>{
+  if(!order.created_at)return;
+  const date=new Date(order.created_at);
+  if(Number.isNaN(date.getTime()))return;
+  const key=date.toLocaleDateString("en-IN",{day:"2-digit",month:"short"});
+  days[key]=(days[key]||0)+Number(order.total_amount||0);
+ });
+ let entries=Object.entries(days);
+ if(entries.length>14)entries=entries.slice(-14);
+ const max=Math.max(1,...entries.map(entry=>entry[1]));
+ if(!entries.length){
+  $(targetId).innerHTML='<div class="report-empty">No sales data for this period.</div>';return;
+ }
+ $(targetId).innerHTML=entries.map(([label,value])=>{
+  const height=Math.max(3,(value/max)*100);
+  return `<div class="chart-column"><span class="chart-value">${money(value)}</span><div class="chart-bar-wrap"><div class="chart-bar" style="height:${height}%"></div></div><span class="chart-label">${escapeHTML(label)}</span></div>`;
+ }).join("");
+}
+function renderCustomerReports(list){
+ const customers={};
+ list.forEach(order=>{
+  const phone=String(order.customer_phone||"").trim();
+  const name=String(order.customer_name||"").trim();
+  const key=phone||name;
+  if(!key)return;
+  if(!customers[key])customers[key]={orders:0,name:name||"Customer"};
+  customers[key].orders++;
+ });
+ const values=Object.values(customers);
+ const repeat=values.filter(customer=>customer.orders>1).length;
+ const totalOrders=values.reduce((sum,customer)=>sum+customer.orders,0);
+ $("rUniqueCustomers").textContent=values.length;
+ $("rRepeatCustomers").textContent=repeat;
+ $("rNewCustomerOrders").textContent=values.filter(customer=>customer.orders===1).length;
+ $("rCustomerAverage").textContent=values.length?(totalOrders/values.length).toFixed(1):"0";
+ $("customerSummaryList").innerHTML=`
+  <div class="report-status-row"><span>Identified customers</span><strong>${values.length}</strong></div>
+  <div class="report-status-row"><span>Repeat customers</span><strong>${repeat}</strong></div>
+  <div class="report-status-row"><span>Orders from repeat customers</span><strong>${values.filter(customer=>customer.orders>1).reduce((sum,c)=>sum+c.orders,0)}</strong></div>
+ `;
+}
+function renderMenuReports(){
+ const total=menuItems.length;
+ const photos=menuItems.filter(item=>String(item.image_url||"").trim()).length;
+ const descriptions=menuItems.filter(item=>String(item.description||"").trim()).length;
+ const available=menuItems.filter(item=>item.is_available===true).length;
+ const veg=menuItems.filter(item=>item.item_type==="Veg").length;
+ const nonveg=menuItems.filter(item=>item.item_type==="Non-Veg").length;
+ $("rMenuTotal").textContent=total;
+ $("rMenuPhotos").textContent=photos;
+ $("rMenuDescriptions").textContent=descriptions;
+ $("rMenuAvailable").textContent=available;
+ $("rMenuPhotoRate").textContent=percent(photos,total);
+ $("rMenuDescriptionRate").textContent=percent(descriptions,total);
+ $("rMenuVeg").textContent=veg;
+ $("rMenuNonVeg").textContent=nonveg;
+
+ const sold={};
+ getReportOrders().forEach(order=>{
+  (order.order_items||[]).forEach(item=>{
+   const name=String(item.product_name||item.name||"Unknown Item");
+   const qty=Number(item.quantity||0);
+   if(!sold[name])sold[name]=0;
+   sold[name]+=Number.isFinite(qty)?qty:0;
+  });
+ });
+ const top=Object.entries(sold).sort((a,b)=>b[1]-a[1]).slice(0,8);
+ if(!top.length){
+  $("topSellingItems").innerHTML='<div class="report-empty">No order item details available for this period.</div>';
+ }else{
+  $("topSellingItems").innerHTML=`<table class="report-table"><thead><tr><th>Food Item</th><th class="right">Quantity</th></tr></thead><tbody>${top.map(([name,qty])=>`<tr><td>${escapeHTML(name)}</td><td class="right"><strong>${qty}</strong></td></tr>`).join("")}</tbody></table>`;
+ }
+}
+function renderReports(){
+ if(!$("reportRange"))return;
+ const list=getReportOrders();
+ const total=list.length;
+ const completed=list.filter(o=>o.status==="Picked Up");
+ const rejected=list.filter(o=>o.status==="Rejected");
+ const active=list.filter(o=>["New","Preparing","Ready"].includes(o.status));
+ const totalValue=sumAmount(list);
+ const completedValue=sumAmount(completed);
+ const rejectedValue=sumAmount(rejected);
+ const aov=total?totalValue/total:0;
+
+ setReportText();
+
+ $("rOverviewSales").textContent=money(totalValue);
+ $("rOverviewOrders").textContent=total;
+ $("rOverviewCompleted").textContent=completed.length;
+ $("rOverviewAov").textContent=money(aov);
+
+ $("rSalesTotal").textContent=money(totalValue);
+ $("rSalesCompleted").textContent=money(completedValue);
+ $("rSalesAov").textContent=money(aov);
+ $("rSalesRejected").textContent=money(rejectedValue);
+ $("salesCompletedCount").textContent=completed.length;
+ $("salesRejectedCount").textContent=rejected.length;
+ $("salesActiveCount").textContent=active.length;
+ const days=Number($("reportRange").value);
+ $("salesPerDay").textContent=days? (total/days).toFixed(1):"—";
+
+ $("rOrderTotal").textContent=total;
+ $("rOrderNew").textContent=list.filter(o=>o.status==="New").length;
+ $("rOrderPreparing").textContent=list.filter(o=>o.status==="Preparing").length;
+ $("rOrderReady").textContent=list.filter(o=>o.status==="Ready").length;
+ $("rOrderPicked").textContent=completed.length;
+ $("rOrderRejected").textContent=rejected.length;
+ $("rOrderCompletionRate").textContent=percent(completed.length,total);
+ $("rOrderRejectionRate").textContent=percent(rejected.length,total);
+
+ $("rRestaurantStatus").textContent=restaurantIsOnline?"ONLINE":"OFFLINE";
+ $("rOpsCompleted").textContent=completed.length;
+ $("rOpsActive").textContent=active.length;
+ $("rOpsRejected").textContent=rejected.length;
+
+ renderStatusBreakdown("overviewStatusList",list);
+ renderStatusBreakdown("ordersStatusList",list);
+ renderSalesChart("overviewSalesChart",list);
+ renderSalesChart("salesChart",list);
+ renderCustomerReports(list);
+ renderMenuReports();
+}
+
+/* REPORT TABS */
+$("reportRange").addEventListener("change",renderReports);
+$("reportNav").addEventListener("click",event=>{
+ const button=event.target.closest("button[data-report-target]");
+ if(!button)return;
+ document.querySelectorAll("#reportNav button").forEach(b=>b.classList.remove("active"));
+ button.classList.add("active");
+ const target=$(button.dataset.reportTarget);
+ if(target)target.scrollIntoView({behavior:"smooth",block:"start"});
+});
+
+/* DOWNLOAD REPORT CSV */
+$("downloadReportButton").addEventListener("click",()=>{
+ const list=getReportOrders();
+ const rows=[
+  ["Order Number","Date","Customer","Status","Order Amount"],
+  ...list.map(order=>[
+   order.order_number??order.id,
+   order.created_at||"",
+   order.customer_name||"",
+   order.status||"",
+   Number(order.total_amount||0)
+  ])
+ ];
+ const csv=rows.map(row=>row.map(value=>`"${String(value??"").replace(/"/g,'""')}"`).join(",")).join("\n");
+ const blob=new Blob(["\uFEFF"+csv],{type:"text/csv;charset=utf-8;"});
+ const url=URL.createObjectURL(blob);
+ const link=document.createElement("a");
+ link.href=url;
+ link.download="Streets-Of-Punjab-Orders-Report.csv";
+ document.body.appendChild(link);
+ link.click();
+ link.remove();
+ URL.revokeObjectURL(url);
+});
 
 /* MENU DATA */
 async function loadMenuData(){
@@ -627,11 +1204,13 @@ async function loadMenuData(){
   if(itemResult.error)throw itemResult.error;
   menuCategories=categoryResult.data||[];menuItems=itemResult.data||[];menuLoaded=true;
   if(selectedMenuCategory!=="all"&&!menuCategories.some(c=>String(c.id)===String(selectedMenuCategory)))selectedMenuCategory="all";
-  renderCategoryOptions();renderCategoryStrip();renderMenuItems();
+  renderCategoryOptions();renderCategoryStrip();renderMenuItems();renderReports();
  }catch(error){
   menuLoaded=false;
   menuGrid.innerHTML=`<div class="menu-loading">Unable to load menu: ${escapeHTML(error.message)}<br><br>Check your Supabase menu tables.</div>`;
   menuSummary.textContent="Menu could not be loaded.";
+  $("reportError").style.display="block";
+  $("reportError").textContent="Menu report data could not be loaded: "+error.message;
  }
 }
 
@@ -645,36 +1224,113 @@ function renderCategoryOptions(selectedId=""){
  });
 }
 
-/* LEFT CATEGORY SIDEBAR */
+/* CATEGORY SIDEBAR WITH EDIT AND DELETE */
 function renderCategoryStrip(){
  categoryStrip.innerHTML="";
+
  const allButton=document.createElement("button");
  allButton.type="button";
  allButton.className="category-side-item"+(selectedMenuCategory==="all"?" active":"");
  allButton.dataset.category="all";
- allButton.innerHTML=`<span>All Items</span><span class="category-count">${menuItems.length}</span>`;
+ allButton.innerHTML=`
+  <span class="category-name-wrap"><span>All Items</span></span>
+  <span class="category-count">${menuItems.length}</span>
+ `;
  categoryStrip.appendChild(allButton);
 
  menuCategories.forEach(category=>{
   const count=menuItems.filter(item=>String(item.category_id)===String(category.id)).length;
-  const button=document.createElement("button");
-  button.type="button";
-  button.className="category-side-item"+(String(selectedMenuCategory)===String(category.id)?" active":"");
-  button.dataset.category=category.id;
-  button.innerHTML=`<span>${escapeHTML(category.name)}</span><span class="category-count">${count}</span>`;
-  categoryStrip.appendChild(button);
+
+  const wrapper=document.createElement("div");
+  wrapper.className="category-side-item"+(String(selectedMenuCategory)===String(category.id)?" active":"");
+  wrapper.style.display="flex";
+  wrapper.style.alignItems="center";
+  wrapper.style.gap="7px";
+
+  const nameButton=document.createElement("button");
+  nameButton.type="button";
+  nameButton.className="category-side-item";
+  nameButton.style.flex="1";
+  nameButton.style.padding="0";
+  nameButton.style.minWidth="0";
+  nameButton.dataset.category=category.id;
+  nameButton.innerHTML=`<span class="category-name-wrap"><span>${escapeHTML(category.name)}</span></span><span class="category-count">${count}</span>`;
+
+  const actions=document.createElement("span");
+  actions.className="category-actions";
+  actions.innerHTML=`
+   <button type="button" class="category-action edit" data-category-action="edit" data-id="${escapeHTML(category.id)}">Edit</button>
+   <button type="button" class="category-action delete" data-category-action="delete" data-id="${escapeHTML(category.id)}">Delete</button>
+  `;
+
+  wrapper.appendChild(nameButton);
+  wrapper.appendChild(actions);
+  categoryStrip.appendChild(wrapper);
  });
+
  updateSelectedCategoryTitle();
 }
 function updateSelectedCategoryTitle(){
  const category=menuCategories.find(c=>String(c.id)===String(selectedMenuCategory));
  $("selectedCategoryTitle").textContent=selectedMenuCategory==="all"?"All Items":category?.name||"All Items";
 }
-categoryStrip.addEventListener("click",event=>{
- const button=event.target.closest("button[data-category]");if(!button)return;
+
+/* CATEGORY CLICK, EDIT AND DELETE */
+categoryStrip.addEventListener("click",async event=>{
+ const actionButton=event.target.closest("button[data-category-action]");
+ if(actionButton){
+  event.stopPropagation();
+  const id=actionButton.dataset.id;
+  const category=menuCategories.find(c=>String(c.id)===String(id));
+  if(!category)return;
+  if(actionButton.dataset.categoryAction==="edit"){await editCategory(category,actionButton);return;}
+  if(actionButton.dataset.categoryAction==="delete"){await deleteCategory(category,actionButton);return;}
+ }
+ const button=event.target.closest("button[data-category]");
+ if(!button)return;
  selectedMenuCategory=button.dataset.category;
- renderCategoryStrip();renderMenuItems();
+ renderCategoryStrip();
+ renderMenuItems();
 });
+
+/* EDIT CATEGORY */
+async function editCategory(category,button){
+ const newName=prompt("Enter the new category name:",category.name);
+ if(newName===null)return;
+ const name=newName.trim();
+ if(!name){showMenuNotice("Category name cannot be empty.","error");return;}
+ if(name.toLowerCase()===String(category.name).toLowerCase())return;
+ const duplicate=menuCategories.some(c=>String(c.id)!==String(category.id)&&String(c.name).toLowerCase()===name.toLowerCase());
+ if(duplicate){showMenuNotice("This category name already exists.","error");return;}
+ button.disabled=true;
+ try{
+  const {error}=await supabase.from("menu_categories").update({name}).eq("id",category.id);
+  if(error)throw error;
+  showMenuNotice("Category name updated successfully.","success");
+  await loadMenuData();
+ }catch(error){showMenuNotice("Unable to update category: "+error.message,"error");}
+ finally{button.disabled=false;}
+}
+
+/* DELETE CATEGORY - PROTECTS FOOD ITEMS */
+async function deleteCategory(category,button){
+ if(!confirm(`Delete "${category.name}"? A category can only be deleted if it has no food items.`))return;
+ button.disabled=true;
+ try{
+  const {count,error:countError}=await supabase.from("menu_items").select("id",{count:"exact",head:true}).eq("category_id",category.id);
+  if(countError)throw countError;
+  if(count>0){
+   showMenuNotice(`Cannot delete "${category.name}". It contains ${count} food item(s). Move those items first.`,"error");
+   return;
+  }
+  const {error}=await supabase.from("menu_categories").delete().eq("id",category.id);
+  if(error)throw error;
+  if(String(selectedMenuCategory)===String(category.id))selectedMenuCategory="all";
+  showMenuNotice("Category deleted successfully.","success");
+  await loadMenuData();
+ }catch(error){showMenuNotice("Unable to delete category: "+error.message,"error");}
+ finally{button.disabled=false;}
+}
 
 /* RENDER FOOD ITEMS */
 function renderMenuItems(){
@@ -718,16 +1374,36 @@ function renderMenuItems(){
 
 /* FOOD ITEM MODAL */
 function openMenuModal(item=null){
- clearMenuNotice();$("menuModalError").style.display="none";menuItemForm.reset();
+ clearMenuNotice();
+ $("menuModalError").style.display="none";
+ menuItemForm.reset();
+
+ resetPhotoSelection();
+
  $("menuModalTitle").textContent=item?"Edit Food Item":"Add Food Item";
  $("saveMenuItemButton").textContent=item?"Update Food Item":"Save Food Item";
- $("menuItemId").value=item?item.id:"";$("menuItemName").value=item?.name||"";
- $("menuItemPrice").value=item?.price??"";$("menuItemType").value=item?.item_type||"Veg";
- $("menuItemDescription").value=item?.description||"";$("menuItemImage").value=item?.image_url||"";
+ $("menuItemId").value=item?item.id:"";
+ $("menuItemName").value=item?.name||"";
+ $("menuItemPrice").value=item?.price??"";
+ $("menuItemType").value=item?.item_type||"Veg";
+ $("menuItemDescription").value=item?.description||"";
+ $("menuItemImage").value=item?.image_url||"";
  $("menuItemAvailability").value=String(item?item.is_available:true);
- renderCategoryOptions(item?.category_id||"");menuModalBackdrop.classList.add("show");
+
+ if(item?.image_url){
+  $("menuPhotoPreview").src=item.image_url;
+  $("menuPhotoPreview").hidden=false;
+  $("photoPreviewPlaceholder").hidden=true;
+  $("photoStatusText").textContent="Current saved photo. Choose a new photo to replace it.";
+ }
+
+ renderCategoryOptions(item?.category_id||"");
+ menuModalBackdrop.classList.add("show");
 }
-function closeMenuModal(){menuModalBackdrop.classList.remove("show");}
+function closeMenuModal(){
+ menuModalBackdrop.classList.remove("show");
+ clearCropResources();
+}
 $("addMenuItemButton").addEventListener("click",()=>{
  if(!menuCategories.length){showMenuNotice("पहले Add Category से कम-से-कम एक category बनाएँ।","error");return;}
  openMenuModal();
@@ -754,55 +1430,103 @@ $("addCategoryButton").addEventListener("click",async()=>{
  }catch(error){showMenuNotice("Unable to add category: "+error.message,"error");}
 });
 
-/* SAVE FOOD ITEM */
+/* SAVE FOOD ITEM WITH CROPPED PHOTO UPLOAD */
 menuItemForm.addEventListener("submit",async event=>{
- event.preventDefault();if(menuSaving)return;
- const id=$("menuItemId").value,name=$("menuItemName").value.trim();
- const categoryId=$("menuItemCategory").value,price=Number($("menuItemPrice").value);
- const itemType=$("menuItemType").value,description=$("menuItemDescription").value.trim();
- const imageUrl=$("menuItemImage").value.trim(),isAvailable=$("menuItemAvailability").value==="true";
- const errorBox=$("menuModalError");errorBox.style.display="none";
+ event.preventDefault();
+ if(menuSaving)return;
+
+ const id=$("menuItemId").value;
+ const name=$("menuItemName").value.trim();
+ const categoryId=$("menuItemCategory").value;
+ const price=Number($("menuItemPrice").value);
+ const itemType=$("menuItemType").value;
+ const description=$("menuItemDescription").value.trim();
+ const isAvailable=$("menuItemAvailability").value==="true";
+ const errorBox=$("menuModalError");
+
+ errorBox.style.display="none";
+
  if(!name||!categoryId||!Number.isFinite(price)||price<0){
-  errorBox.textContent="Please enter a valid item name, category and price.";errorBox.style.display="block";return;
+  showMenuModalError("Please enter a valid item name, category and price.");
+  return;
  }
- if(imageUrl){
-  try{const parsed=new URL(imageUrl);if(!["http:","https:"].includes(parsed.protocol))throw new Error();}
-  catch{errorBox.textContent="Enter a valid image URL.";errorBox.style.display="block";return;}
+ if(selectedPhotoFile&&!croppedPhotoBlob){
+  showMenuModalError("Please crop the selected photo before saving.");
+  return;
  }
- const payload={name,category_id:Number(categoryId),price,item_type:itemType,description,image_url:imageUrl,is_available:isAvailable,updated_at:new Date().toISOString()};
- const saveButton=$("saveMenuItemButton");menuSaving=true;saveButton.disabled=true;saveButton.textContent="Saving...";
+
+ const saveButton=$("saveMenuItemButton");
+ menuSaving=true;
+ saveButton.disabled=true;
+ saveButton.textContent=croppedPhotoBlob?"Uploading Photo...":"Saving...";
+
  try{
-  const result=id?await supabase.from("menu_items").update(payload).eq("id",id):await supabase.from("menu_items").insert(payload);
+  let imageUrl=$("menuItemImage").value.trim();
+
+  if(croppedPhotoBlob){
+   imageUrl=await uploadCroppedPhoto();
+  }
+
+  const payload={
+   name,
+   category_id:Number(categoryId),
+   price,
+   item_type:itemType,
+   description,
+   image_url:imageUrl||null,
+   is_available:isAvailable,
+   updated_at:new Date().toISOString()
+  };
+
+  const result=id
+   ?await supabase.from("menu_items").update(payload).eq("id",id)
+   :await supabase.from("menu_items").insert(payload);
+
   if(result.error)throw result.error;
+
   selectedMenuCategory=String(categoryId);
-  closeMenuModal();showMenuNotice(id?"Food item updated successfully.":"Food item added successfully.","success");
+  closeMenuModal();
+  showMenuNotice(id?"Food item updated successfully.":"Food item added successfully.","success");
   await loadMenuData();
- }catch(error){errorBox.textContent="Save failed: "+error.message;errorBox.style.display="block";}
- finally{menuSaving=false;saveButton.disabled=false;saveButton.textContent=id?"Update Food Item":"Save Food Item";}
+
+ }catch(error){
+  showMenuModalError("Save failed: "+error.message);
+ }finally{
+  menuSaving=false;
+  saveButton.disabled=false;
+  saveButton.textContent=id?"Update Food Item":"Save Food Item";
+ }
 });
 
 /* MENU CARD ACTIONS */
 menuGrid.addEventListener("click",async event=>{
- const button=event.target.closest("button[data-menu-action]");if(!button)return;
+ const button=event.target.closest("button[data-menu-action]");
+ if(!button)return;
  const id=button.dataset.id,action=button.dataset.menuAction;
- const item=menuItems.find(entry=>String(entry.id)===String(id));if(!item)return;
+ const item=menuItems.find(entry=>String(entry.id)===String(id));
+ if(!item)return;
+
  if(action==="edit"){openMenuModal(item);return;}
+
  if(action==="delete"){
   if(!confirm(`Delete "${item.name}" from your menu? This cannot be undone.`))return;
   button.disabled=true;
   try{
    const {error}=await supabase.from("menu_items").delete().eq("id",id);
    if(error)throw error;
-   showMenuNotice("Food item deleted successfully.","success");await loadMenuData();
+   showMenuNotice("Food item deleted successfully.","success");
+   await loadMenuData();
   }catch(error){showMenuNotice("Delete failed: "+error.message,"error");button.disabled=false;}
   return;
  }
+
  if(action==="toggle"){
   button.disabled=true;
   try{
    const {error}=await supabase.from("menu_items").update({is_available:!item.is_available,updated_at:new Date().toISOString()}).eq("id",id);
    if(error)throw error;
-   showMenuNotice(item.is_available?"Item marked unavailable.":"Item marked available.","success");await loadMenuData();
+   showMenuNotice(item.is_available?"Item marked unavailable.":"Item marked available.","success");
+   await loadMenuData();
   }catch(error){showMenuNotice("Availability update failed: "+error.message,"error");button.disabled=false;}
  }
 });
@@ -813,11 +1537,13 @@ menuTypeFilter.addEventListener("change",renderMenuItems);
 /* NAVIGATION */
 document.querySelectorAll(".nav-item[data-page]").forEach(item=>{
  item.addEventListener("click",async()=>{
-  const targetId=item.dataset.page,target=$(targetId);if(!target)return;
+  const targetId=item.dataset.page,target=$(targetId);
+  if(!target)return;
   document.querySelectorAll(".page-section").forEach(section=>section.hidden=section.id!==targetId);
   document.querySelectorAll(".nav-item").forEach(nav=>{nav.classList.remove("active");nav.removeAttribute("aria-current");});
   item.classList.add("active");item.setAttribute("aria-current","page");
   if(targetId==="menuPage"&&!menuLoaded)await loadMenuData();
+  if(targetId==="reportsPage")renderReports();
  });
 });
 
