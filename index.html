@@ -57,6 +57,13 @@ button{cursor:pointer}
 .search:focus{border-color:#e85d24}
 .order-list{display:grid;grid-template-columns:repeat(2,minmax(0,1fr));gap:18px}
 .order-card{background:#fff;border:1px solid #eaeaea;border-radius:11px;padding:20px}
+.prep-time-panel{background:#fff8ef;border:1px solid #f3d4b8;border-radius:10px;padding:13px;margin:0 0 14px}
+.prep-time-title{font-size:12px;font-weight:800;color:#8a431e;margin-bottom:9px}
+.prep-time-controls{display:flex;align-items:center;gap:12px}
+.prep-time-controls button{width:36px;height:36px;border:0;border-radius:8px;background:#e85d24;color:#fff;font-size:22px;font-weight:800}
+.prep-time-controls button:disabled{opacity:.35;cursor:not-allowed}
+.prep-time-value{font-size:20px;font-weight:900;min-width:76px;text-align:center;color:#242424}
+.prep-time-help{font-size:11px;color:#8b6b58;margin-top:7px}
 .order-top{display:flex;justify-content:space-between;align-items:center;gap:10px;margin-bottom:15px}
 .order-id{font-weight:bold;font-size:17px}
 .status{font-size:11px;padding:6px 10px;border-radius:20px;font-weight:bold}
@@ -271,6 +278,62 @@ button{cursor:pointer}
 .menu-image,.menu-image-placeholder{width:100%;height:150px;flex-basis:150px}
 .report-cards{grid-template-columns:1fr 1fr}
 }
+
+$("savePrinterSettings")?.addEventListener("click",savePrinterSettings);
+loadPrinterSettings();
+
+/* CUSTOMER FINANCE */
+.finance-head{display:flex;justify-content:space-between;align-items:center;gap:12px;flex-wrap:wrap;margin-bottom:18px}
+.finance-cards{display:grid;grid-template-columns:repeat(4,minmax(0,1fr));gap:13px;margin:18px 0}
+.finance-card{background:#171717;color:#f7e5b0;border:1px solid #9a772c;border-radius:12px;padding:18px;min-width:0}
+.finance-card span{display:block;color:#d6c18a;font-size:12px;margin-bottom:12px}.finance-card strong{font-size:23px;overflow-wrap:anywhere}
+.finance-filters{display:flex;gap:10px;align-items:center;margin:18px 0;flex-wrap:wrap}.finance-filters .search{flex:1;min-width:190px}
+.finance-table-wrap{width:100%;overflow-x:auto;background:#fff;border:1px solid #e8dfca;border-radius:12px}
+.finance-table{width:100%;border-collapse:collapse;min-width:950px;font-size:12px}.finance-table th{background:#171717;color:#f5df9f;text-align:left;padding:13px 11px;white-space:nowrap}.finance-table td{padding:13px 11px;border-bottom:1px solid #eee8da;vertical-align:top;line-height:1.6}.finance-table tr:last-child td{border-bottom:0}
+.finance-items{max-width:220px}.finance-proof{display:inline-block;padding:7px 10px;background:#171717;color:#f4d78d;border:1px solid #a88436;border-radius:7px;font-weight:700}.finance-proof:disabled{opacity:.45}.finance-status{display:inline-block;padding:5px 8px;border-radius:20px;font-weight:700;font-size:10px;background:#fff4d8;color:#8a6418}.finance-status.verified{background:#e7f6ec;color:#18713b}.finance-status.rejected{background:#fdeaea;color:#b32c2c}
+.finance-action{border:0;border-radius:7px;padding:7px 9px;margin:2px;font-weight:700;font-size:11px}.finance-verify{background:#187b45;color:white}.finance-reject{background:#b83232;color:white}.finance-empty{text-align:center;color:#888;padding:28px!important}.finance-footnote{font-size:11px;color:#777;margin:12px 0}
+@media(max-width:800px){.finance-cards{grid-template-columns:repeat(2,minmax(0,1fr))}.finance-card{padding:14px}.finance-card strong{font-size:19px}}
+
+
+/* NEW ORDER SOUND ALERTS */
+.notification-control{display:flex;align-items:center;gap:12px;flex-shrink:0}
+.notification-info{display:flex;flex-direction:column;gap:5px}
+.notification-title{font-size:11px;font-weight:800;letter-spacing:.7px}
+.notification-description{font-size:10px;color:#cbd5e1}
+.notification-sound-button{border:1px solid #64748b;border-radius:9px;background:#263244;color:#fff;padding:11px 14px;font-size:11px;font-weight:800;white-space:nowrap}
+.notification-sound-button.enabled{background:#123c2b;border-color:#168b50;color:#dcfce7}
+.notification-sound-button:disabled{opacity:.6;cursor:not-allowed}
+.new-order-toast{position:fixed;right:18px;bottom:18px;z-index:500;width:min(360px,calc(100vw - 28px));background:#142033;color:#fff;border:1px solid #3b4d67;border-left:5px solid #22c55e;border-radius:12px;padding:16px;box-shadow:0 14px 40px #0004;display:none}
+.new-order-toast.show{display:block;animation:orderToastIn .22s ease-out}
+.new-order-toast strong{display:block;font-size:15px;margin-bottom:6px}
+.new-order-toast p{font-size:12px;color:#d8e0ec;line-height:1.5;margin-bottom:12px}
+.new-order-toast button{border:0;border-radius:7px;background:#e85d24;color:#fff;padding:9px 12px;font-size:12px;font-weight:800}
+@keyframes orderToastIn{from{opacity:0;transform:translateY(10px)}to{opacity:1;transform:translateY(0)}}
+@media(max-width:700px){
+ .notification-control{width:100%;justify-content:space-between;padding-top:9px;border-top:1px solid #334155}
+ .notification-sound-button{min-width:145px}
+ .new-order-toast{right:10px;bottom:10px}
+}
+
+
+/* KOT / BILL PRINT CONTROLS */
+.order-print-actions{display:flex;gap:6px;align-items:center;flex-wrap:wrap;justify-content:flex-end}
+.print-order-btn{border:1px solid #d8dde5;background:#fff;color:#263244;border-radius:7px;padding:7px 10px;font-size:10px;font-weight:800;letter-spacing:.3px}
+.print-order-btn.kot{border-color:#f0c7a9;color:#a94718;background:#fff8f2}
+.print-order-btn.bill{border-color:#b8c8e3;color:#234d85;background:#f5f8ff}
+.print-order-btn:hover{filter:brightness(.97)}
+.printer-settings-grid{display:grid;grid-template-columns:repeat(2,minmax(0,1fr));gap:18px;margin-top:20px}
+.printer-setting-card{background:#fff;border:1px solid #e5e7eb;border-radius:13px;padding:20px}
+.printer-setting-card h3{font-size:16px;margin-bottom:7px}
+.printer-setting-card p{font-size:12px;color:#777;line-height:1.6;margin-bottom:14px}
+.printer-setting-card label{display:block;font-size:12px;font-weight:700;margin-bottom:7px}
+.printer-setting-card input{width:100%;padding:11px 12px;border:1px solid #d9dde5;border-radius:8px;outline:none}
+.printer-setting-card input:focus{border-color:#e85d24}
+.printer-setting-note{background:#fff8e8;border:1px solid #f3dfaa;color:#79571b;border-radius:10px;padding:14px;margin-top:18px;font-size:12px;line-height:1.7}
+.printer-settings-actions{display:flex;align-items:center;gap:12px;flex-wrap:wrap;margin-top:18px}
+.printer-save-status{font-size:12px;color:#168348;font-weight:700}
+@media(max-width:700px){.printer-settings-grid{grid-template-columns:1fr}.order-top{align-items:flex-start;flex-wrap:wrap}.order-print-actions{width:100%;justify-content:flex-start}}
+
 </style>
 </head>
 
@@ -291,6 +354,13 @@ button{cursor:pointer}
         <h2>Streets Of Punjab</h2>
         <p>Streets Of Punjab, Sindhi Colony, PG Road, Secunderabad, Hyderabad</p>
     </div>
+    <div class="notification-control">
+        <div class="notification-info">
+            <span class="notification-title">NEW ORDER ALERTS</span>
+            <span class="notification-description" id="notificationSoundDescription">Sound starts automatically when you log in; browser permission may be required</span>
+        </div>
+        <button type="button" class="notification-sound-button" id="notificationSoundButton">🔔 AUTO SOUND · MUTE</button>
+    </div>
     <div class="restaurant-status-control">
         <div class="restaurant-status-info">
             <span class="restaurant-status-title">RESTAURANT STATUS</span>
@@ -303,6 +373,12 @@ button{cursor:pointer}
         </button>
     </div>
 </section>
+
+<div class="new-order-toast" id="newOrderToast" role="status" aria-live="polite">
+    <strong id="newOrderToastTitle">🔔 New Order Received</strong>
+    <p id="newOrderToastText">A customer has placed a new order.</p>
+    <button type="button" id="viewNewOrderButton">VIEW NEW ORDER</button>
+</div>
 
 <div class="login-screen" id="loginScreen">
     <div class="login-card">
@@ -450,6 +526,10 @@ button{cursor:pointer}
             <div class="report-card"><p class="report-card-label">Average Order Value</p><h2 class="report-card-value" id="rSalesAov">₹0</h2><p class="report-card-foot">Average order value</p></div>
             <div class="report-card"><p class="report-card-label">Rejected Order Value</p><h2 class="report-card-value" id="rSalesRejected">₹0</h2><p class="report-card-foot">Value of rejected orders</p></div>
         </div>
+        <div class="report-cards" style="margin-top:13px">
+            <div class="report-card"><p class="report-card-label">Verified Payments Received</p><h2 class="report-card-value" id="rVerifiedReceived">₹0</h2><p class="report-card-foot">Customer payments manually verified</p></div>
+            <div class="report-card"><p class="report-card-label">Payment Pending</p><h2 class="report-card-value" id="rPaymentPending">₹0</h2><p class="report-card-foot">Unverified customer payments</p></div>
+        </div>
         <div class="report-grid-two" style="margin-top:17px">
             <div class="report-panel"><h3>Daily Order Value</h3><div class="report-chart" id="salesChart"></div></div>
             <div class="report-panel">
@@ -534,8 +614,43 @@ button{cursor:pointer}
 <section class="page-section" id="growthPage" hidden><h1 class="page-title">Growth</h1><p class="subtitle">Growth tools and promotions.</p></section>
 <section class="page-section" id="complaintsPage" hidden><h1 class="page-title">Complaints</h1><p class="subtitle">Customer complaints.</p></section>
 <section class="page-section" id="ratingsPage" hidden><h1 class="page-title">Ratings</h1><p class="subtitle">Customer ratings.</p></section>
-<section class="page-section" id="financePage" hidden><h1 class="page-title">Finance</h1><p class="subtitle">Finance overview.</p></section>
-<section class="page-section" id="settingsPage" hidden><h1 class="page-title">Settings</h1><p class="subtitle">Restaurant settings.</p></section>
+<section class="page-section" id="financePage" hidden>
+ <div class="finance-head"><div><h1 class="page-title">Finance & Payments</h1><p class="subtitle">Customer website orders, payment proof and verified collections.</p></div><button class="primary-btn" type="button" id="refreshFinanceButton">↻ Refresh</button></div>
+ <div id="financeNotice" class="notice"></div>
+ <div class="finance-cards">
+  <div class="finance-card"><span>Total Customer Orders</span><strong id="finOrderCount">0</strong></div>
+  <div class="finance-card"><span>Total Order Value</span><strong id="finOrderValue">₹0</strong></div>
+  <div class="finance-card"><span>Amount Received (Verified)</span><strong id="finReceived">₹0</strong></div>
+  <div class="finance-card"><span>Payment Pending</span><strong id="finPending">₹0</strong></div>
+ </div>
+ <div class="finance-filters"><input id="financeSearch" class="search" type="search" placeholder="Search order, customer or phone..."><select id="financeStatusFilter" class="report-select"><option value="all">All Payments</option><option value="unverified">Unverified</option><option value="verified">Verified</option><option value="rejected">Rejected</option></select></div>
+ <div class="finance-table-wrap"><table class="finance-table"><thead><tr><th>Order / Date</th><th>Customer Details</th><th>Items</th><th>Bill</th><th>Payment Proof</th><th>Payment Status</th><th>Action</th></tr></thead><tbody id="financeTableBody"><tr><td colspan="7" class="finance-empty">Loading customer payments...</td></tr></tbody></table></div>
+ <p class="finance-footnote">Only payments manually marked Verified are counted as received. Unverified and rejected payments are not counted as collections.</p>
+</section>
+<section class="page-section" id="settingsPage" hidden>
+ <h1 class="page-title">Printer Settings</h1>
+ <p class="subtitle">Configure separate printer names for Kitchen KOT and Counter Bill.</p>
+ <div id="printerNotice" class="notice"></div>
+ <div class="printer-settings-grid">
+  <div class="printer-setting-card">
+   <h3>🍳 Kitchen Printer — KOT</h3>
+   <p>Used when you press KOT / KITCHEN on an order. Prints only the kitchen preparation ticket without prices.</p>
+   <label for="kotPrinterName">Kitchen printer name / label</label>
+   <input id="kotPrinterName" type="text" maxlength="80" placeholder="e.g. Kitchen Thermal Printer">
+  </div>
+  <div class="printer-setting-card">
+   <h3>🧾 Counter Printer — BILL</h3>
+   <p>Used when you press BILL / COUNTER on an order. Prints the customer's itemized bill and total amount.</p>
+   <label for="billPrinterName">Counter printer name / label</label>
+   <input id="billPrinterName" type="text" maxlength="80" placeholder="e.g. Counter Billing Printer">
+  </div>
+ </div>
+ <div class="printer-settings-actions">
+  <button class="primary-btn" type="button" id="savePrinterSettings">Save Printer Settings</button>
+  <span class="printer-save-status" id="printerSaveStatus" aria-live="polite"></span>
+ </div>
+ <div class="printer-setting-note"><strong>Important:</strong> The browser does not allow a normal website to silently choose or route to a physical printer. When you print, the system print dialog will open; select the configured Kitchen printer for KOT or Counter printer for Bill. Automatic separate-printer routing requires a local print service such as QZ Tray or a dedicated print bridge on a connected computer.</div>
+</section>
 
 <section class="page-section" id="profilePage" hidden>
     <h1 class="page-title">Admin Profile</h1>
@@ -664,8 +779,12 @@ const menuGrid=$("menuGrid"),menuSearch=$("menuSearch"),menuTypeFilter=$("menuTy
 const categoryStrip=$("categoryStrip"),menuSummary=$("menuSummary");
 const menuModalBackdrop=$("menuModalBackdrop"),menuItemForm=$("menuItemForm");
 
-let orders=[],currentTab="New",realtimeChannel=null,isLoading=false,dashboardUserId=null;
+let orders=[],currentTab="New",realtimeChannel=null,isLoading=false,orderReloadQueued=false,dashboardUserId=null,ordersAutoRefreshInterval=null;
 let restaurantIsOnline=false,restaurantStatusInterval=null,restaurantStatusSaving=false;
+let notificationAudioContext=null,notificationSoundEnabled=false,knownCustomerOrderIds=null;
+let pendingRealtimeOrderAlerts=new Map(),notifiedCustomerOrderIds=new Set(),newOrderToastTimer=null;
+let pendingNewOrderIds=new Set(),orderRingTimer=null;
+let preparationTimeByOrder=new Map();
 let menuItems=[],menuCategories=[],selectedMenuCategory="all",menuLoaded=false,menuSaving=false;
 
 let cropper=null;
@@ -832,11 +951,14 @@ async function uploadCroppedPhoto(){
 /* LOGIN */
 loginForm.addEventListener("submit",async event=>{
  event.preventDefault();hideLoginNotice();loginButton.disabled=true;loginButton.textContent="Logging in...";
+ // Resume audio immediately within the Login click/submit gesture, before the network request.
+ const soundActivation=enableOrderNotifications({playTestTone:false,requestPermission:false});
  const email=$("email").value.trim(),password=$("password").value;
  try{
   const {data,error}=await supabase.auth.signInWithPassword({email,password});
   if(error)throw error;
   if(!data.user)throw new Error("Login user details were not returned.");
+  await soundActivation;
   await startDashboard(data.user);
  }catch(error){showLoginNotice(error.message||"Login failed.");}
  finally{loginButton.disabled=false;loginButton.textContent="Login to Dashboard";}
@@ -877,7 +999,129 @@ async function loadAdminProfile(user){
  }
 }
 
-/* RESTAURANT STATUS */
+/* NEW CUSTOMER ORDER SOUND + VISUAL NOTIFICATIONS */
+const notificationSoundButton=$("notificationSoundButton");
+const notificationSoundDescription=$("notificationSoundDescription");
+const newOrderToast=$("newOrderToast");
+
+function playOrderChime(){
+ if(!notificationSoundEnabled||!notificationAudioContext)return;
+ try{
+  const ctx=notificationAudioContext;
+  const now=ctx.currentTime;
+  // Original, high-visibility two-tone restaurant order bell (not a copied Petpooja audio file).
+  const notes=[{f:1046.5,t:0,d:.24},{f:1396.9,t:.28,d:.28},{f:1046.5,t:.72,d:.24},{f:1396.9,t:1.00,d:.34}];
+  notes.forEach(note=>{
+   const osc=ctx.createOscillator();
+   const gain=ctx.createGain();
+   osc.type="square";
+   osc.frequency.setValueAtTime(note.f,now+note.t);
+   gain.gain.setValueAtTime(.0001,now+note.t);
+   gain.gain.exponentialRampToValueAtTime(.30,now+note.t+.018);
+   gain.gain.setValueAtTime(.30,now+note.t+note.d-.045);
+   gain.gain.exponentialRampToValueAtTime(.0001,now+note.t+note.d);
+   osc.connect(gain);gain.connect(ctx.destination);
+   osc.start(now+note.t);osc.stop(now+note.t+note.d+.02);
+  });
+ }catch(error){console.warn("Order alert sound could not play:",error)}
+}
+
+function stopOrderRing(){
+ if(orderRingTimer){clearInterval(orderRingTimer);orderRingTimer=null;}
+}
+function refreshOrderRing(){
+ if(!notificationSoundEnabled||pendingNewOrderIds.size===0){stopOrderRing();return;}
+ if(!orderRingTimer){
+  playOrderChime();
+  orderRingTimer=setInterval(()=>{
+   if(!notificationSoundEnabled||pendingNewOrderIds.size===0){stopOrderRing();return;}
+   if(notificationAudioContext?.state==="running")playOrderChime();
+  },2600);
+ }
+}
+function syncPendingNewOrders(rows){
+ pendingNewOrderIds=new Set(rows.filter(row=>row.status==="New").map(row=>String(row.id)));
+ refreshOrderRing();
+}
+
+async function enableOrderNotifications({playTestTone=true,requestPermission=true}={}){
+ try{
+  const AudioContextClass=window.AudioContext||window.webkitAudioContext;
+  if(!AudioContextClass)throw new Error("This browser does not support audio alerts.");
+  if(!notificationAudioContext)notificationAudioContext=new AudioContextClass();
+  await notificationAudioContext.resume();
+  notificationSoundEnabled=notificationAudioContext.state==="running";
+  if(!notificationSoundEnabled)throw new Error("Tap Enable Sound again to allow audio.");
+  notificationSoundButton.textContent="🔔 SOUND ON · MUTE";
+  notificationSoundButton.classList.add("enabled");
+  notificationSoundDescription.textContent="Sound alerts are enabled";
+  if(pendingNewOrderIds.size)refreshOrderRing();else if(playTestTone)playOrderChime();
+  if(requestPermission&&"Notification" in window&&Notification.permission==="default"){
+   try{await Notification.requestPermission()}catch(_){/* visual and audio alerts still work */}
+  }
+ }catch(error){
+  notificationSoundEnabled=false;
+  stopOrderRing();
+  notificationSoundButton.textContent="🔔 ENABLE SOUND";
+  notificationSoundButton.classList.remove("enabled");
+  notificationSoundDescription.textContent=error.message||"Sound could not be enabled";
+ }
+}
+notificationSoundButton.addEventListener("click",async()=>{
+ if(notificationSoundEnabled){
+  notificationSoundEnabled=false;
+  stopOrderRing();
+  notificationSoundButton.textContent="🔔 ENABLE SOUND";
+  notificationSoundButton.classList.remove("enabled");
+  notificationSoundDescription.textContent="Sound alerts are muted";
+  return;
+ }
+ await enableOrderNotifications();
+});
+
+function showNewOrderToast(order){
+ const code=order.order_code||order.order_number||order.id;
+ const customer=order.customer_name||"Customer";
+ const amount=money(order.total_amount);
+ $("newOrderToastTitle").textContent="🔔 New Order Received · #"+code;
+ $("newOrderToastText").textContent=customer+" placed an order worth "+amount+"."+(notificationSoundEnabled?"":" Tap Enable Sound for audio alerts.");
+ newOrderToast.classList.add("show");
+ if(newOrderToastTimer)clearTimeout(newOrderToastTimer);
+ newOrderToastTimer=setTimeout(()=>newOrderToast.classList.remove("show"),12000);
+}
+
+function notifyNewCustomerOrder(order){
+ const id=String(order?.id??"");
+ if(!id||notifiedCustomerOrderIds.has(id))return;
+ notifiedCustomerOrderIds.add(id);
+ if(String(order.status||"placed").toLowerCase()==="placed"||String(order.status||"new").toLowerCase()==="new")pendingNewOrderIds.add(id);
+ refreshOrderRing();
+ showNewOrderToast(order);
+ if("Notification" in window&&Notification.permission==="granted"){
+  try{
+   const notice=new Notification("Streets Of Punjab · New Order",{
+    body:(order.customer_name||"Customer")+" · Order #"+(order.order_code||order.id)+" · "+money(order.total_amount),
+    tag:"sop-order-"+id,
+    renotify:false
+   });
+   notice.onclick=()=>{window.focus();showNewOrderToast(order);notice.close()};
+  }catch(error){console.warn("Browser notification unavailable:",error)}
+ }
+}
+
+$("viewNewOrderButton").addEventListener("click",()=>{
+ newOrderToast.classList.remove("show");
+ const ordersNav=document.querySelector('.nav-item[data-page="ordersPage"]');
+ if(ordersNav)ordersNav.click();
+ currentTab="New";
+ document.querySelectorAll(".tab").forEach(tab=>{
+  const active=tab.dataset.tab==="New";
+  tab.classList.toggle("active",active);
+ });
+ $("sectionTitle").innerText="New Orders";
+ renderOrders();
+});
+
 function renderRestaurantStatus(isOnline){
  restaurantIsOnline=Boolean(isOnline);
  restaurantStatusButton.classList.toggle("is-online",restaurantIsOnline);
@@ -922,37 +1166,142 @@ function stopRestaurantStatusSync(){
  if(restaurantStatusInterval){clearInterval(restaurantStatusInterval);restaurantStatusInterval=null;}
 }
 
+/* AUTOMATIC ORDER REFRESH: 30-second fallback if realtime is unavailable */
+function startOrdersAutoRefresh(){
+ stopOrdersAutoRefresh();
+ ordersAutoRefreshInterval=setInterval(()=>{
+  if(dashboardUserId&&loginScreen.style.display==="none"&&document.visibilityState==="visible"){
+   loadOrders();
+  }
+ },30000);
+}
+function stopOrdersAutoRefresh(){
+ if(ordersAutoRefreshInterval){clearInterval(ordersAutoRefreshInterval);ordersAutoRefreshInterval=null;}
+}
+
 /* START DASHBOARD */
 async function startDashboard(user){
  if(dashboardUserId===user.id&&loginScreen.style.display==="none")return;
+ // Best-effort auto-start for a restored session; browsers may still require a user gesture.
+ if(!notificationSoundEnabled)enableOrderNotifications({playTestTone:false,requestPermission:false});
  dashboardUserId=user.id;loginScreen.style.display="none";logoutButton.style.display="block";
+ knownCustomerOrderIds=null;pendingRealtimeOrderAlerts.clear();notifiedCustomerOrderIds.clear();pendingNewOrderIds.clear();stopOrderRing();
  try{
-  await checkAdmin(user);await loadAdminProfile(user);startRestaurantStatusSync();
-  clearNotice();await loadOrders();subscribeToOrders();await loadMenuData();
+  await checkAdmin(user);await loadAdminProfile(user);startRestaurantStatusSync();startOrdersAutoRefresh();
+  clearNotice();subscribeToOrders();await loadOrders();await loadMenuData();
   loginConnection.textContent="Connected to Supabase successfully.";
  }catch(error){
-  dashboardUserId=null;stopRestaurantStatusSync();loginScreen.style.display="flex";
+  dashboardUserId=null;stopRestaurantStatusSync();stopOrdersAutoRefresh();loginScreen.style.display="flex";
   logoutButton.style.display="none";showLoginNotice(error.message);loginConnection.textContent="Admin access check failed.";
  }
 }
 
 /* ORDERS */
 async function loadOrders(){
- if(isLoading)return;isLoading=true;
+ if(isLoading){orderReloadQueued=true;return;}
+ isLoading=true;
  try{
-  const {data,error}=await supabase.from("orders").select("*, order_items(*)").order("created_at",{ascending:false});
-  if(error)throw error;orders=data||[];renderOrders();
+  const [legacyResult,customerResult]=await Promise.all([
+   supabase.from("orders").select("*, order_items(*)").order("created_at",{ascending:false}),
+   supabase.from("customer_orders").select("*").order("created_at",{ascending:false})
+  ]);
+
+  if(customerResult.error){
+   throw new Error("Customer orders could not be loaded. Check admin SELECT permissions on customer_orders. "+customerResult.error.message);
+  }
+
+  const warnings=[];
+  let legacyRows=[];
+  if(legacyResult.error){
+   warnings.push("Legacy orders unavailable: "+legacyResult.error.message);
+  }else{
+   legacyRows=legacyResult.data||[];
+  }
+
+  const customerRows=customerResult.data||[];
+  if(knownCustomerOrderIds===null){
+   knownCustomerOrderIds=new Set(customerRows.map(row=>String(row.id)));
+   pendingRealtimeOrderAlerts.forEach(row=>notifyNewCustomerOrder(row));
+   pendingRealtimeOrderAlerts.clear();
+  }else{
+   customerRows.forEach(row=>{
+    const id=String(row.id);
+    if(!knownCustomerOrderIds.has(id)){
+     knownCustomerOrderIds.add(id);
+     notifyNewCustomerOrder(row);
+    }
+   });
+  }
+  let customerItems=[];
+  if(customerRows.length){
+   const ids=customerRows.map(row=>row.id);
+   const {data,error}=await supabase.from("customer_order_items").select("*").in("order_id",ids);
+   if(error){
+    warnings.push("Some customer order items could not be loaded: "+error.message);
+   }else{
+    customerItems=data||[];
+   }
+  }
+
+  const itemsByOrder=new Map();
+  customerItems.forEach(item=>{
+   const key=String(item.order_id);if(!itemsByOrder.has(key))itemsByOrder.set(key,[]);
+   itemsByOrder.get(key).push({product_name:item.item_name,quantity:item.quantity,unit_price:item.unit_price});
+  });
+
+  const mappedCustomers=customerRows.map(row=>({
+   ...row,_source:"customer",order_number:row.order_code||String(row.id),customer_phone:row.phone,
+   status:({placed:"New",new:"New",preparing:"Preparing",ready:"Ready",picked_up:"Picked Up",completed:"Picked Up",rejected:"Rejected"})[String(row.status||"placed").toLowerCase()]||"New",
+   payment_status:row.payment_status||"unverified",preparation_time_minutes:row.preparation_time_minutes??null,order_items:itemsByOrder.get(String(row.id))||[]
+  }));
+
+  syncPendingNewOrders(mappedCustomers);
+
+  orders=[...legacyRows.map(row=>({...row,_source:"legacy"})),...mappedCustomers]
+   .sort((a,b)=>new Date(b.created_at||0)-new Date(a.created_at||0));
+
+  renderOrders();renderFinance();
+  if(warnings.length)showNotice(warnings.join(" | "),"error");
+  else clearNotice();
+
  }catch(error){
-  showNotice("Unable to load orders: "+error.message);
-  orderList.innerHTML='<div class="empty"><h2>Unable to Load Orders</h2><p>Check database connection and permissions.</p></div>';
- }finally{isLoading=false;}
+  showNotice("Unable to load customer orders: "+error.message);
+  orderList.innerHTML='<div class="empty"><h2>Unable to Load Orders</h2><p>Check database connection and admin permissions.</p></div>';
+ }finally{
+  isLoading=false;
+  if(orderReloadQueued){
+   orderReloadQueued=false;
+   Promise.resolve().then(()=>loadOrders());
+  }
+ }
 }
 function subscribeToOrders(){
  if(realtimeChannel)supabase.removeChannel(realtimeChannel);
  realtimeChannel=supabase.channel("admin-orders-live")
  .on("postgres_changes",{event:"*",schema:"public",table:"orders"},loadOrders)
  .on("postgres_changes",{event:"*",schema:"public",table:"order_items"},loadOrders)
- .subscribe(status=>{if(status==="SUBSCRIBED")clearNotice();if(status==="CHANNEL_ERROR")showNotice("Real-time connection interrupted.");});
+ .on("postgres_changes",{event:"INSERT",schema:"public",table:"customer_orders"},payload=>{
+  const row=payload.new;
+  if(row?.id){
+   const id=String(row.id);
+   if(knownCustomerOrderIds===null)pendingRealtimeOrderAlerts.set(id,row);
+   else if(!knownCustomerOrderIds.has(id)){
+    knownCustomerOrderIds.add(id);
+    notifyNewCustomerOrder(row);
+   }
+  }
+  loadOrders();
+ })
+ .on("postgres_changes",{event:"UPDATE",schema:"public",table:"customer_orders"},loadOrders)
+ .on("postgres_changes",{event:"DELETE",schema:"public",table:"customer_orders"},loadOrders)
+ .on("postgres_changes",{event:"*",schema:"public",table:"customer_order_items"},loadOrders)
+ .subscribe(status=>{
+  if(status==="SUBSCRIBED"){
+   loadOrders();
+  }else if(status==="CHANNEL_ERROR"||status==="TIMED_OUT"||status==="CLOSED"){
+   showNotice("Real-time connection interrupted. Orders will update after the connection is restored.");
+  }
+ });
 }
 function renderOrders(){
  const query=search.value.trim().toLowerCase();
@@ -967,31 +1316,221 @@ function renderOrders(){
  filtered.forEach(order=>{
   const statusClass={"New":"new","Preparing":"preparing","Ready":"ready","Picked Up":"picked","Rejected":"rejected"}[order.status]||"";
   let buttons="";
-  if(order.status==="New")buttons=`<button class="btn accept" data-id="${escapeHTML(order.id)}" data-status="Preparing">Accept Order</button><button class="btn reject" data-id="${escapeHTML(order.id)}" data-status="Rejected">Reject</button>`;
+  let prepHTML="";
+  if(order.status==="New"&&order._source==="customer"){
+   const prep=preparationTimeByOrder.get(String(order.id))??5;
+   prepHTML=`<div class="prep-time-panel"><div class="prep-time-title">⏱ PREPARATION TIME</div><div class="prep-time-controls"><button type="button" data-prep-step="-1" data-prep-id="${escapeHTML(order.id)}" ${prep<=5?"disabled":""}>−</button><div class="prep-time-value">${prep} min</div><button type="button" data-prep-step="1" data-prep-id="${escapeHTML(order.id)}" ${prep>=15?"disabled":""}>+</button></div><div class="prep-time-help">Set estimated preparation time (5–15 minutes)</div></div>`;
+   buttons=`<button class="btn accept" data-accept-prep="${escapeHTML(order.id)}">✓ ACCEPT ORDER & SEND TIME</button><button class="btn reject" data-id="${escapeHTML(order.id)}" data-status="Rejected">Reject</button>`;
+  }else if(order.status==="New")buttons=`<button class="btn accept" data-id="${escapeHTML(order.id)}" data-status="Preparing">Accept Order</button><button class="btn reject" data-id="${escapeHTML(order.id)}" data-status="Rejected">Reject</button>`;
   else if(order.status==="Preparing")buttons=`<button class="btn ready-btn" data-id="${escapeHTML(order.id)}" data-status="Ready">Mark Ready</button>`;
   else if(order.status==="Ready")buttons=`<button class="btn picked-btn" data-id="${escapeHTML(order.id)}" data-status="Picked Up">Mark Picked Up</button>`;
   else if(order.status==="Picked Up")buttons='<span style="color:green;font-size:13px">✓ Order Completed</span>';
   else if(order.status==="Rejected")buttons='<span style="color:#d33;font-size:13px">Order Rejected</span>';
   const itemsHTML=(order.order_items||[]).map(item=>`<div>• ${escapeHTML(item.product_name)} x ${escapeHTML(item.quantity)}</div>`).join("")||"<div>Order items unavailable</div>";
+  const paymentStatus=String(order.payment_status||"not_applicable").toUpperCase();
+  let paymentHTML="";
+  if(order._source==="customer"){
+   const proofButton=order.payment_screenshot_path?`<button class="btn" type="button" data-proof-id="${escapeHTML(order.id)}">View Payment Screenshot</button>`:"<span>Payment proof not uploaded</span>";
+   const verifyButtons=order.payment_status==="verified"?'<span style="color:#27834a;font-weight:700">✓ Payment Verified</span>':`<button class="btn accept" type="button" data-payment-id="${escapeHTML(order.id)}" data-payment-status="verified">Verify Payment</button><button class="btn reject" type="button" data-payment-id="${escapeHTML(order.id)}" data-payment-status="rejected">Reject Payment</button>`;
+   paymentHTML=`<div class="order-info" style="margin-top:10px"><strong>Payment: ${escapeHTML(paymentStatus)}</strong><br>${proofButton}<div class="actions">${verifyButtons}</div></div>`;
+  }
   const card=document.createElement("div");card.className="order-card";
-  card.innerHTML=`<div class="order-top"><span class="order-id">#${escapeHTML(order.order_number??order.id)}</span><span class="status ${statusClass}">${escapeHTML(order.status).toUpperCase()}</span></div>
-  <div class="order-info">${escapeHTML(formatTime(order.created_at))}<br>Customer: ${escapeHTML(order.customer_name||"Customer")}<br>Phone: ${escapeHTML(order.customer_phone||"Not provided")}<br>Address: ${escapeHTML(order.delivery_address||"Not provided")}<br>Online Order</div>
-  <div class="items">${itemsHTML}</div><div class="total">₹${Number(order.total_amount||0).toFixed(2)}</div><div class="actions">${buttons}</div>`;
+  card.innerHTML=`<div class="order-top"><div><span class="order-id">#${escapeHTML(order.order_number??order.id)}</span><div style="margin-top:7px"><span class="status ${statusClass}">${escapeHTML(order.status).toUpperCase()}</span></div></div><div class="order-print-actions"><button class="print-order-btn kot" type="button" data-print-kind="kot" data-print-order="${escapeHTML(order.id)}">🍳 KOT / KITCHEN</button><button class="print-order-btn bill" type="button" data-print-kind="bill" data-print-order="${escapeHTML(order.id)}">🧾 BILL / COUNTER</button></div></div>
+  <div class="order-info">${escapeHTML(formatTime(order.created_at))}<br>Customer: ${escapeHTML(order.customer_name||"Customer")}<br>Phone: ${escapeHTML(order.customer_phone||"Not provided")}<br>Address: ${escapeHTML(order.delivery_address||"Not provided")}<br>${order._source==="customer"?"Customer Website Order":"Online Order"}</div>
+  <div class="items">${itemsHTML}</div>${prepHTML}<div class="total">₹${Number(order.total_amount||0).toFixed(2)}</div>${order.preparation_time_minutes?`<div class="order-info"><strong>Preparation Time:</strong> ${Number(order.preparation_time_minutes)} minutes</div>`:""}${paymentHTML}<div class="actions">${buttons}</div>`;
   orderList.appendChild(card);
  });
- updateStats();
+ if(typeof updateStats==="function")updateStats();
 }
-async function updateOrder(id,status){
+async function updateOrder(id,status,preparationMinutes=null){
  if(status==="Rejected"&&!confirm("Are you sure you want to reject this order?"))return;
- const buttons=orderList.querySelectorAll(`button[data-id="${CSS.escape(String(id))}"]`);
- buttons.forEach(button=>button.disabled=true);
+ const order=orders.find(row=>String(row.id)===String(id));
+ const buttons=orderList.querySelectorAll(`button[data-id="${CSS.escape(String(id))}"]`);buttons.forEach(button=>button.disabled=true);
  try{
-  const {error}=await supabase.from("orders").update({status}).eq("id",id);
-  if(error)throw error;showNotice("Order status updated successfully.","success");await loadOrders();
+  let result;
+  if(order?._source==="customer"){
+   const customerStatus=({"New":"placed","Preparing":"preparing","Ready":"ready","Picked Up":"picked_up","Rejected":"rejected"})[status]||status.toLowerCase();
+   const updateData={status:customerStatus};
+   if(status==="Preparing"&&Number.isInteger(preparationMinutes))updateData.preparation_time_minutes=preparationMinutes;
+   result=await supabase.from("customer_orders").update(updateData).eq("id",id);
+  }else result=await supabase.from("orders").update({status}).eq("id",id);
+  if(result.error)throw result.error;showNotice(preparationMinutes?"Order accepted. Customer has been informed: "+preparationMinutes+" minutes.":"Order status updated successfully.","success");await loadOrders();
  }catch(error){showNotice("Status update failed: "+error.message);await loadOrders();}
 }
+async function updateCustomerPayment(id,paymentStatus){
+ if(paymentStatus==="rejected"&&!confirm("Reject this payment proof? The customer will need to contact the restaurant."))return;
+ try{
+  const {error}=await supabase.from("customer_orders").update({payment_status:paymentStatus}).eq("id",id);
+  if(error)throw error;showNotice("Payment status updated to "+paymentStatus+".","success");await loadOrders();
+ }catch(error){showNotice("Payment update failed: "+error.message);}
+}
+async function viewCustomerPaymentProof(id){
+ const order=orders.find(row=>String(row.id)===String(id));if(!order?.payment_screenshot_path)return;
+ try{
+  const {data,error}=await supabase.storage.from("payment-proofs").createSignedUrl(order.payment_screenshot_path,90);
+  if(error)throw error;if(!data?.signedUrl)throw new Error("Could not create a secure preview link.");
+  window.open(data.signedUrl,"_blank","noopener,noreferrer");
+ }catch(error){showNotice("Could not open payment screenshot: "+error.message);}
+}
+
+/* KOT / BILL PRINTING */
+function getPrinterSettings(){
+ const safeGet=(key)=>{try{return localStorage.getItem(key)||"";}catch(_){return "";}};
+ return {kot:safeGet("sop_kot_printer_name"),bill:safeGet("sop_bill_printer_name")};
+}
+function loadPrinterSettings(){
+ const cfg=getPrinterSettings();
+ const kot=$("kotPrinterName"),bill=$("billPrinterName");
+ if(kot)kot.value=cfg.kot;
+ if(bill)bill.value=cfg.bill;
+}
+function savePrinterSettings(){
+ const kot=($("kotPrinterName")?.value||"").trim();
+ const bill=($("billPrinterName")?.value||"").trim();
+ try{
+  localStorage.setItem("sop_kot_printer_name",kot);
+  localStorage.setItem("sop_bill_printer_name",bill);
+  $("printerSaveStatus").textContent="✓ Printer labels saved on this device";
+ }catch(error){
+  $("printerSaveStatus").textContent="Could not save settings in this browser";
+ }
+}
+function printOrderDocument(order,kind){
+ if(!order){showNotice("Order details could not be found.");return;}
+ const isKot=kind==="kot";
+ const cfg=getPrinterSettings();
+ const printerLabel=isKot?(cfg.kot||"Kitchen printer — choose in print dialog"):(cfg.bill||"Counter printer — choose in print dialog");
+ const orderCode=order.order_number||order.order_code||order.id;
+ const customer=order.customer_name||"Customer";
+ const phone=order.customer_phone||order.phone||"Not provided";
+ const created=new Date(order.created_at||Date.now());
+ const receivedTime=Number.isNaN(created.getTime())?"Time unavailable":created.toLocaleString("en-IN",{dateStyle:"medium",timeStyle:"short"});
+ const prep=Number(order.preparation_time_minutes||0);
+ const acceptedAt=new Date(order.updated_at||order.created_at||Date.now());
+ const readyAt=prep&&!Number.isNaN(acceptedAt.getTime())?new Date(acceptedAt.getTime()+prep*60000):null;
+ const expectedTime=readyAt&&!Number.isNaN(readyAt.getTime())?readyAt.toLocaleTimeString("en-IN",{hour:"2-digit",minute:"2-digit"}):"Not set";
+ const items=Array.isArray(order.order_items)?order.order_items:[];
+ const safe=(v)=>escapeHTML(v??"");
+ const itemRows=items.map((item,index)=>{
+  const name=item.product_name||item.item_name||item.name||"Item";
+  const qty=Number(item.quantity||1);
+  const rate=Number(item.unit_price??item.price??0);
+  const amount=qty*rate;
+  return `<tr><td class="item-name">${safe(name)}</td><td class="qty">${safe(qty)}</td>${isKot?"":`<td class="rate">${money(rate)}</td><td class="amount">${money(amount)}</td>`}</tr>`;
+ }).join("");
+ const customerAddress=order.delivery_address||"";
+ const restaurantAddress="Streets Of Punjab, Sindhi Colony, PG Road, Secunderabad, Hyderabad";
+ const total=Number(order.total_amount??order.total??0);
+ const title=isKot?"KITCHEN ORDER TICKET":"CUSTOMER BILL";
+ const html=`<!DOCTYPE html><html><head><meta charset="UTF-8"><meta name="viewport" content="width=device-width,initial-scale=1"><title>${title} #${safe(orderCode)}</title>
+ <style>
+ *{box-sizing:border-box}body{font-family:Arial,sans-serif;color:#111;margin:0;padding:18px;font-size:13px}
+ .ticket{max-width:420px;margin:0 auto}.brand{text-align:center;font-size:21px;font-weight:900;letter-spacing:.4px;margin-bottom:3px}
+ .sub{text-align:center;font-size:11px;font-weight:700;letter-spacing:1px;margin-bottom:8px}
+ .restaurant-address{text-align:center;font-size:10px;line-height:1.35;margin:0 0 10px;font-weight:600}
+ .kind{border:2px solid #111;text-align:center;font-size:17px;font-weight:900;padding:8px;margin:10px 0}
+ .line{border-top:1px dashed #555;margin:10px 0}.meta{display:flex;justify-content:space-between;gap:10px;margin:6px 0}.meta strong{font-weight:800}
+ .customer{line-height:1.7}.section{font-weight:900;margin:10px 0 6px}
+ table{width:100%;border-collapse:collapse;margin-top:8px}th{border-bottom:2px solid #111;padding:7px 3px;text-align:left;font-size:11px}
+ td{padding:8px 3px;border-bottom:1px dashed #aaa;vertical-align:top}.qty,.rate,.amount{text-align:right;white-space:nowrap}.item-name{font-weight:700;overflow-wrap:anywhere}
+ .total{display:flex;justify-content:space-between;border-top:2px solid #111;margin-top:10px;padding-top:10px;font-size:18px;font-weight:900}
+ .foot{text-align:center;font-size:10px;margin-top:18px;line-height:1.5}.printer{font-size:9px;color:#555;text-align:center;margin-top:8px}
+ .ticket.kot{font-size:11px}.ticket.kot .brand{font-size:15px;margin-bottom:1px}.ticket.kot .sub,.ticket.kot .printer{display:none}.ticket.kot .kind{font-size:13px;padding:4px;margin:5px 0;border-width:1px}.ticket.kot .meta{margin:3px 0;gap:6px}.ticket.kot .line{margin:5px 0}.ticket.kot .customer{line-height:1.3}.ticket.kot .section{margin:5px 0 2px}.ticket.kot table{margin-top:3px}.ticket.kot th{font-size:10px;padding:3px 2px}.ticket.kot td{padding:4px 2px}.ticket.kot .foot{display:none}
+ @page{margin:5mm;size:auto}
+ @media print{body{padding:0}.ticket{max-width:none}}
+ </style></head><body><main class="ticket${isKot?" kot":""}">
+ <div class="brand">STREETS OF PUNJAB</div><div class="sub">AUTHENTIC PUNJABI FOOD</div>
+ ${isKot?"":`<div class="restaurant-address">${safe(restaurantAddress)}</div>`}
+ <div class="kind">${title}</div>
+ <div class="meta"><span>Order ID</span><strong>#${safe(orderCode)}</strong></div>
+ <div class="meta"><span>Order Received</span><strong>${safe(receivedTime)}</strong></div>
+ <div class="line"></div>
+ <div class="customer"><strong>Customer:</strong> ${safe(customer)}<br><strong>Phone:</strong> ${safe(phone)}${!isKot&&customerAddress?`<br><strong>Delivery Address:</strong> ${safe(customerAddress)}`:""}</div>
+ ${isKot?`<div class="meta"><span>Prep</span><strong>${prep?prep+" min":"Not set"}</strong></div><div class="meta"><span>Ready</span><strong>${safe(expectedTime)}</strong></div>`:""}
+ <div class="section">${isKot?"ITEMS TO PREPARE":"BILL DETAILS"}</div>
+ <table><thead><tr><th>Item</th><th class="qty">Qty</th>${isKot?"":'<th class="rate">Rate</th><th class="amount">Amount</th>'}</tr></thead><tbody>${itemRows||`<tr><td colspan="${isKot?2:4}">Order items unavailable</td></tr>`}</tbody></table>
+ ${isKot?"":`<div class="total"><span>GRAND TOTAL</span><span>${money(total)}</span></div><div class="meta"><span>Payment Status</span><strong>${safe(String(order.payment_status||"Unverified").toUpperCase())}</strong></div><div class="foot">Thank you for ordering from Streets Of Punjab!<br>Visit again.</div>`}
+ ${isKot?"":`<div class="printer">Intended printer: ${safe(printerLabel)}</div>`}
+ </main><script>window.addEventListener("load",function(){setTimeout(function(){window.focus();window.print();},250);});window.addEventListener("afterprint",function(){setTimeout(function(){window.close();},300);});<\/script></body></html>`;
+ const printWindow=window.open("","_blank","width=480,height=720");
+ if(!printWindow){showNotice("Print window was blocked. Allow pop-ups for this Admin website and try again.");return;}
+ printWindow.document.open();printWindow.document.write(html);printWindow.document.close();
+}
+
+function changePreparationTime(id,step){
+ const order=orders.find(row=>String(row.id)===String(id));
+ if(!order||order._source!=="customer"||order.status!=="New")return;
+ const current=preparationTimeByOrder.get(String(id))??5;
+ preparationTimeByOrder.set(String(id),Math.max(5,Math.min(15,current+step)));
+ renderOrders();
+}
 orderList.addEventListener("click",event=>{
+ const printButton=event.target.closest("button[data-print-kind][data-print-order]");
+ if(printButton){
+  const targetOrder=orders.find(row=>String(row.id)===String(printButton.dataset.printOrder));
+  printOrderDocument(targetOrder,printButton.dataset.printKind);
+  return;
+ }
+ const prepStep=event.target.closest("button[data-prep-step]");
+ if(prepStep){changePreparationTime(prepStep.dataset.prepId,Number(prepStep.dataset.prepStep));return;}
+ const acceptPrep=event.target.closest("button[data-accept-prep]");
+ if(acceptPrep){
+  const id=acceptPrep.dataset.acceptPrep;
+  const minutes=preparationTimeByOrder.get(String(id))??5;
+  acceptPrep.disabled=true;
+  updateOrder(id,"Preparing",minutes).then(()=>preparationTimeByOrder.delete(String(id)));
+  return;
+ }
+ const proof=event.target.closest("button[data-proof-id]");if(proof){viewCustomerPaymentProof(proof.dataset.proofId);return;}
+ const payment=event.target.closest("button[data-payment-id]");if(payment){updateCustomerPayment(payment.dataset.paymentId,payment.dataset.paymentStatus);return;}
  const button=event.target.closest("button[data-id]");if(button)updateOrder(button.dataset.id,button.dataset.status);
+});
+
+/* CUSTOMER FINANCE */
+function customerOrders(){return orders.filter(o=>o._source==="customer");}
+function renderFinance(){
+ const rows=customerOrders();
+ const received=rows.filter(o=>String(o.payment_status).toLowerCase()==="verified").reduce((n,o)=>n+Number(o.total_amount||0),0);
+ const pending=rows.filter(o=>!['verified','rejected'].includes(String(o.payment_status||'unverified').toLowerCase())).reduce((n,o)=>n+Number(o.total_amount||0),0);
+ $("finOrderCount").textContent=rows.length;
+ $("finOrderValue").textContent=money(rows.reduce((n,o)=>n+Number(o.total_amount||0),0));
+ $("finReceived").textContent=money(received);$("finPending").textContent=money(pending);
+ const q=($("financeSearch")?.value||"").trim().toLowerCase();
+ const status=$("financeStatusFilter")?.value||"all";
+ const visible=rows.filter(o=>{
+  const st=String(o.payment_status||"unverified").toLowerCase();
+  const hay=[o.order_number,o.customer_name,o.customer_phone,o.phone,o.customer_email].join(" ").toLowerCase();
+  return (status==="all"||st===status)&&(!q||hay.includes(q));
+ });
+ const body=$("financeTableBody");
+ if(!visible.length){body.innerHTML='<tr><td colspan="7" class="finance-empty">No customer payment records found.</td></tr>';return;}
+ body.innerHTML=visible.map(o=>{
+  const st=String(o.payment_status||"unverified").toLowerCase();
+  const cls=st==="verified"?"verified":st==="rejected"?"rejected":"";
+  const items=(o.order_items||[]).map(i=>`${escapeHTML(i.product_name)} × ${escapeHTML(i.quantity)} (${money(Number(i.unit_price||0)*Number(i.quantity||0))})`).join("<br>")||"Items not available";
+  const proof=o.payment_screenshot_path?`<button class="finance-proof" type="button" data-fin-proof="${escapeHTML(o.id)}">View Screenshot</button>`:"Not uploaded";
+  const actions=st==="verified"?'<strong style="color:#18713b">✓ Verified</strong>':`<button class="finance-action finance-verify" data-fin-pay="${escapeHTML(o.id)}" data-fin-status="verified">Verify</button><button class="finance-action finance-reject" data-fin-pay="${escapeHTML(o.id)}" data-fin-status="rejected">Reject</button>`;
+  return `<tr><td><strong>#${escapeHTML(o.order_number||o.id)}</strong><br>${escapeHTML(formatTime(o.created_at))}</td><td><strong>${escapeHTML(o.customer_name||"Customer")}</strong><br>${escapeHTML(o.customer_phone||"Not provided")}<br>${escapeHTML(o.customer_email||"")}<br>${escapeHTML(o.delivery_address||"")}</td><td><div class="finance-items">${items}</div></td><td><strong>${money(o.total_amount)}</strong></td><td>${proof}</td><td><span class="finance-status ${cls}">${escapeHTML(st.toUpperCase())}</span></td><td>${actions}</td></tr>`;
+ }).join("");
+}
+async function setFinancePayment(id,status){
+ if(status==="rejected"&&!confirm("Reject this payment proof?"))return;
+ try{
+  const {error}=await supabase.from("customer_orders").update({payment_status:status}).eq("id",id);
+  if(error)throw error;
+  showFinanceNotice("Payment status updated to "+status+".","success");await loadOrders();
+ }catch(e){showFinanceNotice("Payment update failed: "+e.message,"error");}
+}
+function showFinanceNotice(message,type="error"){
+ const el=$("financeNotice");if(!el)return;el.textContent=message;el.className="notice "+type;el.style.display="block";
+}
+$("financeSearch").addEventListener("input",renderFinance);
+$("financeStatusFilter").addEventListener("change",renderFinance);
+$("refreshFinanceButton").addEventListener("click",async()=>{await loadOrders();renderFinance();});
+$("financeTableBody").addEventListener("click",async event=>{
+ const proof=event.target.closest("button[data-fin-proof]");
+ if(proof){await viewCustomerPaymentProof(proof.dataset.finProof);return;}
+ const pay=event.target.closest("button[data-fin-pay]");if(pay)await setFinancePayment(pay.dataset.finPay,pay.dataset.finStatus);
 });
 
 /* REPORT DATE FILTER */
@@ -1117,6 +1656,9 @@ function renderReports(){
  const aov=total?totalValue/total:0;
 
  setReportText();
+ const customerList=list.filter(o=>o._source==="customer");
+ $("rVerifiedReceived").textContent=money(customerList.filter(o=>String(o.payment_status).toLowerCase()==="verified").reduce((n,o)=>n+Number(o.total_amount||0),0));
+ $("rPaymentPending").textContent=money(customerList.filter(o=>!['verified','rejected'].includes(String(o.payment_status||'unverified').toLowerCase())).reduce((n,o)=>n+Number(o.total_amount||0),0));
 
  $("rOverviewSales").textContent=money(totalValue);
  $("rOverviewOrders").textContent=total;
@@ -1544,6 +2086,7 @@ document.querySelectorAll(".nav-item[data-page]").forEach(item=>{
   item.classList.add("active");item.setAttribute("aria-current","page");
   if(targetId==="menuPage"&&!menuLoaded)await loadMenuData();
   if(targetId==="reportsPage")renderReports();
+  if(targetId==="financePage")renderFinance();
  });
 });
 
@@ -1570,7 +2113,12 @@ supabase.auth.onAuthStateChange((event,session)=>{
  }
  if(event==="SIGNED_OUT"){
   dashboardUserId=null;orders=[];menuItems=[];menuCategories=[];menuLoaded=false;
-  stopRestaurantStatusSync();
+  knownCustomerOrderIds=null;pendingRealtimeOrderAlerts.clear();notifiedCustomerOrderIds.clear();pendingNewOrderIds.clear();stopOrderRing();
+  notificationSoundEnabled=false;
+  notificationSoundButton.textContent="🔔 AUTO SOUND · MUTE";
+  notificationSoundButton.classList.remove("enabled");
+  notificationSoundDescription.textContent="Sound starts automatically when you log in; browser permission may be required";
+  stopRestaurantStatusSync();stopOrdersAutoRefresh();
   if(realtimeChannel){supabase.removeChannel(realtimeChannel);realtimeChannel=null;}
   orderList.innerHTML='<div class="empty"><h2>Please Login</h2></div>';
   menuGrid.innerHTML='<div class="menu-loading">Please login to manage your menu.</div>';
